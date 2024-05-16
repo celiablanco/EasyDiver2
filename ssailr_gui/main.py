@@ -2,7 +2,6 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QMessageBox
 
 from easy_diver import EasyDiver
-from enrichment_stats import EnrichmentStats
 from graph_figures import GraphFigures
 
 class MainMenu(QWidget):
@@ -17,17 +16,11 @@ class MainMenu(QWidget):
 
         layout = QVBoxLayout()
 
-        options = ["Run All", "Use EasyDIVER", "Calculate Enrichment Statistics", "Figures and Misc.", "Help", "Quit"]
+        options = ["EasyDIVER + SSAILR", "Help", "Quit"]
         for option in options:
             button = QPushButton(option, self)
-            if option == "Use EasyDIVER":
-                button.clicked.connect(self.easy_diver)
-                
-            if option == "Calculate Enrichment Statistics":
-                button.clicked.connect(self.calculate_enrichment_statistics)
-            
-            if option == "Figures and Misc.":
-                button.clicked.connect(self.display_figures)
+            if option == "EasyDIVER + SSAILR":
+                button.clicked.connect(self.run_all)
 
             if option == "Help":
                 button.clicked.connect(self.display_help_message) 
@@ -41,19 +34,8 @@ class MainMenu(QWidget):
         self.show()
 
     def run_all(self):
-        pass
-
-    def easy_diver(self):
-        self.easy_diver_widget = EasyDiver()
-        self.easy_diver_widget.show()
-
-    def calculate_enrichment_statistics(self):
-        self.enrichment_stats_widget = EnrichmentStats()
-        self.enrichment_stats_widget.show()
-
-    def display_figures(self):
-        self.graph_figures_widget = GraphFigures()
-        self.graph_figures_widget.show()
+        self.easy_diver = EasyDiver()
+        self.easy_diver.show()
 
     def display_help_message(self):
         help_text = """

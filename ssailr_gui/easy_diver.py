@@ -1,10 +1,14 @@
+import os
 import subprocess
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QCheckBox, QFileDialog, QPushButton, QMessageBox, QProgressBar
+
 from directory_edit import ClickableDirectoryEdit
+from ssailr import SSAILR
 
 class EasyDiver(QWidget):
     def __init__(self):
         super().__init__()
+        self.ssailr = SSAILR()
         self.init_ui()
     
     def init_ui(self):
@@ -63,6 +67,10 @@ class EasyDiver(QWidget):
         self.extra_flags_edit = QLineEdit()
         layout.addWidget(self.extra_flags_label)
         layout.addWidget(self.extra_flags_edit)
+        
+        # Option for SSAILR
+        self.run_ssailr = QCheckBox("Run SSAILR")
+        layout.addWidget(self.run_ssailr)
 
         # Progress bar
         self.progress_bar = QProgressBar()
@@ -89,6 +97,22 @@ class EasyDiver(QWidget):
         directory = QFileDialog.getExistingDirectory(self, 'Select Directory')
         if directory:
             self.input_dir_edit.setText(directory)
+    
+    def create_graphs(self):
+        dir_path = "data/pipeline.output/histos"
+        if os.path.exists(dir_path):
+            print(f"The directory '{dir_path}' exists.")
+        else:
+            raise FileNotFoundError(f"The directory '{dir_path}' does not exist.")
+
+        for i in range(1, 4):
+            run_script = f"python3 graphs.py {dir_path} {i}"
+        
+        res = subprocess.Popen(run_script.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+
+        if not res.returncode == 0:
+            error_message = res.stderr.read()
+            QMessageBox.critical(self, "Error", f"An error occurred: {error_message}")
 
     def submit(self):
         run_script = "bash easydiver.sh "
@@ -100,6 +124,8 @@ class EasyDiver(QWidget):
         
         if self.output_dir_edit.text():
             run_script += f" -o {self.output_dir_edit.text()}"
+        else:
+            output_dir = "data/pipeline.output"
 
         if self.forward_primer_edit.text():
             run_script += f" -p {self.forward_primer_edit.text()}"
@@ -110,10 +136,13 @@ class EasyDiver(QWidget):
         if self.threads_edit.text():
             run_script += f" -T {self.threads_edit.text()}"
 
-        if self.translate_check:
+        if self.translate_check.isChecked():
             run_script += " -a"
+            counts_type = "counts.aa"
+        else:
+            counts_type = "counts"
 
-        if self.retain_check:
+        if self.retain_check.isChecked():
             run_script += " -r"
 
         if self.extra_flags_edit.text():
@@ -147,3 +176,7 @@ class EasyDiver(QWidget):
 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")
+        
+        # Run SSAILR
+        if self.run_ssailr.isChecked():
+            self.ssailr.calculate(counts_type, output_dir)
