@@ -2,7 +2,6 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QMessageBox
 
 from easy_diver import EasyDiver
-from graph_figures import GraphFigures
 
 class MainMenu(QWidget):
     def __init__(self):

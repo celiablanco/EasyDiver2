@@ -37,3 +37,18 @@ class SSAILR(QWidget):
 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")
+    
+    def generate_selection_count_reads(self, file_path):
+        run_script = f"python3 graphs.py {file_path} 3"
+
+        try:
+            res = subprocess.Popen(run_script.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            
+            if res.returncode == 0:
+                QMessageBox.information(self, "Success", "Task completed successfully.")
+                self.close()
+            else:
+                error_message = res.stderr.read()
+                QMessageBox.critical(self, "Error", f"An error occurred: {error_message}")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")
