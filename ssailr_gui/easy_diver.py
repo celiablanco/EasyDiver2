@@ -139,10 +139,8 @@ class EasyDiver(QWidget):
         if self.translate_check.isChecked():
             run_script += " -a"
             counts_type = "counts.aa"
-            counts_path = "data/pipeline.output/counts.aa"
         else:
             counts_type = "counts"
-            counts_path = "data/pipeline.output/counts.aa"
 
         if self.retain_check.isChecked():
             run_script += " -r"
@@ -184,4 +182,4 @@ class EasyDiver(QWidget):
             self.ssailr.calculate(counts_type, output_dir)
 
         # Generate Selection Count Reads
-        self.ssailr.generate_selection_count_reads(counts_path)
+        self.ssailr.generate_histo_graphs(counts_type)

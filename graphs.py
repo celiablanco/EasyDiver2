@@ -42,7 +42,7 @@ def remove_outliers(x_values, y_values, zscore_threshold=3):
     return x_values_filtered, y_values_filtered
 
 # Set seaborn style
-sns.set(style="darkgrid")
+sns.set_theme(style="darkgrid")
 
 # Scatterplot
 if graph == "1":
@@ -147,12 +147,24 @@ elif graph == "3":
 
                 sample_names.append(sample_name)  # Store the first data point (sample name)
                 max_round = max(max_round, int(sample_name.split("-")[0]))
+
+                # Extract unique AA count and handle percentage if present
+                unique_aa_count = line_data[total_aa_ind - 1]
+                if unique_aa_count.endswith('%'):
+                    unique_aa_count = unique_aa_count.rstrip('%')
+                unique_aa_count = int(float(unique_aa_count))
+
+                # Extract total AA count and handle percentage if present
+                total_aa_count = line_data[total_aa_ind]
+                if total_aa_count.endswith('%'):
+                    total_aa_count = total_aa_count.rstrip('%')
+                total_aa_count = int(float(total_aa_count))
+
                 # Append unique amino acid (AA) counts to a dictionary, using the AA type as the key
-                # The second-to-last data point ([-2]) is the count of unique AAs
-                unique_aa.setdefault(sample_name_substr[0:sample_name_substr.find("_")], []).append(int(line_data[total_aa_ind - 1]))  # TODO: Don't hardcode?
+                unique_aa.setdefault(sample_name_substr[0:sample_name_substr.find("_")], []).append(unique_aa_count)
+
                 # Append total AA counts to a dictionary, using the AA type as the key
-                # The last data point ([-1]) is the count of total AAs
-                total_aa.setdefault(sample_name_substr[0:sample_name_substr.find("_")], []).append(int(line_data[total_aa_ind]))
+                total_aa.setdefault(sample_name_substr[0:sample_name_substr.find("_")], []).append(total_aa_count)
 
     print("Unique amino acid (AA) counts throughout rounds: " + str(unique_aa))
     print("Total amino acid (AA) counts throughout rounds: " + str(total_aa))
@@ -184,7 +196,6 @@ elif graph == "3":
     plt.xticks(range(0, max_round), [f'#{i}' for i in range(1, max_round + 1)], rotation=45)
     # Adjust layout for better appearance
     plt.tight_layout()
+
     # Save the plot as an image with high resolution (DPI: 500)
-    plt.savefig("figures/aa.png", dpi=500)
-
-
+    plt.savefig("figures/Selection Counts Reads.png", dpi=500)
