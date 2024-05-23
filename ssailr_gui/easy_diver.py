@@ -168,18 +168,20 @@ class EasyDiver(QWidget):
 
             if res.returncode == 0:
                 self.progress_bar.setValue(100)
-                QMessageBox.information(self, "Success", "Task completed successfully.")
+                QMessageBox.information(self, "Success", "EasyDiver completed successfully.")
+
+                # Run SSAILR
+                if self.run_ssailr.isChecked():
+                    self.ssailr.calculate(counts_type, output_dir)
+
+                # Generate Selection Count Reads
+                self.ssailr.generate_histo_graphs(counts_type)
+                
+                # Close EasyDiver + SSAILR Window
                 self.close()
             else:
                 error_message = res.stderr.read()
                 QMessageBox.critical(self, "Error", f"An error occurred: {error_message}")
-
+                
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")
-        
-        # Run SSAILR
-        if self.run_ssailr.isChecked():
-            self.ssailr.calculate(counts_type, output_dir)
-
-        # Generate Selection Count Reads
-        self.ssailr.generate_histo_graphs(counts_type)

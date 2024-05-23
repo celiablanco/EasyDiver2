@@ -29,8 +29,7 @@ class SSAILR(QWidget):
                     break
 
             if res.returncode == 0:
-                QMessageBox.information(self, "Success", "Task completed successfully.")
-                self.close()
+                QMessageBox.information(self, "Success", "SSAILR completed successfully.")
             else:
                 error_message = res.stderr.read()
                 QMessageBox.critical(self, "Error", f"An error occurred: {error_message}")
@@ -47,6 +46,7 @@ class SSAILR(QWidget):
         # Generate histos
         for i in range(1, 4):
             if i == 1:
+                continue
                 file_path = ""
             elif i == 2:
                 file_path = "data/pipeline.output"
@@ -54,8 +54,22 @@ class SSAILR(QWidget):
                 file_path = "data/pipeline.output"
 
             run_script = f"python3 graphs.py {file_path} {i}"
+            print(run_script)
 
             try:
-                subprocess.Popen(run_script.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                res = subprocess.Popen(run_script.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+
+                while True:
+                    output = res.stdout.readline()
+                    print(output)
+                    if res.poll() is not None:
+                        break
+
+                if res.returncode == 0:
+                    QMessageBox.information(self, "Success", "Graphs generated successfully.")
+                else:
+                    error_message = res.stderr.read()
+                    QMessageBox.critical(self, "Error", f"An error occurred: {error_message}")
+
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")
