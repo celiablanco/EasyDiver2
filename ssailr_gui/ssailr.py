@@ -13,6 +13,7 @@ class SSAILR(QWidget):
             QMessageBox.critical(self, "Error", "Output directory doesn't exist.")
             return
         else:
+            print(f"{output_dir} exists.")
             run_script += f" -dir {output_dir}"
         
         run_script += f" -count {counts_type}"
@@ -37,7 +38,7 @@ class SSAILR(QWidget):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")
     
-    def generate_histo_graphs(self, counts_type):
+    def generate_histo_graphs(self, counts_type, input_dir):
         # Check if figures directory exists
         output_dir = "figures"
         if not os.path.exists(output_dir):
@@ -49,9 +50,9 @@ class SSAILR(QWidget):
                 continue
                 file_path = ""
             elif i == 2:
-                file_path = "pipeline.output"
+                file_path = f"{input_dir}/pipeline.output"
             else:    
-                file_path = "pipeline.output"
+                file_path = f"{input_dir}/pipeline.output"
 
             run_script = f"python3 graphs.py {file_path} {i}"
             print(run_script)

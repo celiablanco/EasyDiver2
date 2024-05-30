@@ -125,7 +125,7 @@ class EasyDiver(QWidget):
         if self.output_dir_edit.text():
             run_script += f" -o {self.output_dir_edit.text()}"
         else:
-            output_dir = "pipeline.output"
+            output_dir = f"{self.input_dir_edit.text()}/pipeline.output"
 
         if self.forward_primer_edit.text():
             run_script += f" -p {self.forward_primer_edit.text()}"
@@ -175,7 +175,7 @@ class EasyDiver(QWidget):
                     self.ssailr.calculate(counts_type, output_dir)
 
                 # Generate Selection Count Reads
-                self.ssailr.generate_histo_graphs(counts_type)
+                self.ssailr.generate_histo_graphs(counts_type, output_dir)
                 
                 # Close EasyDiver + SSAILR Window
                 self.close()
