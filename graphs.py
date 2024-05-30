@@ -102,14 +102,14 @@ elif graph == "2":
         plt.figure(figsize=(12, 8))
         # Plotting the histogram without log scale
         plt.subplot(2, 1, 1)
-        plt.bar(lengths, reads_counts, color="steelblue")
+        plt.bar(lengths, reads_counts, color="blue")
         plt.xlabel('Length')
         plt.ylabel('Reads Count')
         plt.title('Read Length Histogram for ' + file)
 
         # Plotting the histogram with log scale
         plt.subplot(2, 1, 2)
-        plt.bar(lengths, reads_counts, color="steelblue")
+        plt.bar(lengths, reads_counts, color="blue")
         plt.xlabel('Length')
         plt.ylabel('Reads Count')
         plt.title('Read Length Histogram (Log Scale)')
@@ -117,10 +117,11 @@ elif graph == "2":
 
         plt.tight_layout()  # Adjust spacing between subplots
         # plt.show()
-        plt.savefig("figures/" + file[:file.rfind(".")] + ".png", dpi=500)
+        plt.savefig(f"{histos}" + file[:file.rfind(".")] + ".png", dpi=500)
         plt.close()
 # Line graph
 elif graph == "3":
+    histos = os.path.join(file_path, "histos")
     file_path += "/log.txt"
 
     # Lists to store the data
@@ -161,10 +162,10 @@ elif graph == "3":
                 total_aa_count = int(float(total_aa_count))
 
                 # Append unique amino acid (AA) counts to a dictionary, using the AA type as the key
-                unique_aa.setdefault(sample_name_substr[0:sample_name_substr.find("_")], []).append(unique_aa_count)
-
+                unique_aa.setdefault(sample_name_substr, []).append(unique_aa_count)
+                
                 # Append total AA counts to a dictionary, using the AA type as the key
-                total_aa.setdefault(sample_name_substr[0:sample_name_substr.find("_")], []).append(total_aa_count)
+                total_aa.setdefault(sample_name_substr, []).append(total_aa_count)
 
     print("Unique amino acid (AA) counts throughout rounds: " + str(unique_aa))
     print("Total amino acid (AA) counts throughout rounds: " + str(total_aa))
@@ -173,11 +174,14 @@ elif graph == "3":
 
     # Iterate through different AA types
     for key in unique_aa.keys():
-        color = "orange"
+        print(key)
         if key == "neg":
             color = "green"
         elif key == "in":
             color = "red"
+        else:
+            color = "orange"
+            
         label_u = "Unique AA " + key
         label_t = "Total AA " + key
         # Plot the unique AA counts and label with the AA type
@@ -198,4 +202,4 @@ elif graph == "3":
     plt.tight_layout()
 
     # Save the plot as an image with high resolution (DPI: 500)
-    plt.savefig("figures/Selection Counts Reads.png", dpi=500)
+    plt.savefig(f"{histos}/Selection Counts Reads.png", dpi=500)
