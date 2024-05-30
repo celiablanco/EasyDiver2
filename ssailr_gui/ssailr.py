@@ -43,6 +43,9 @@ class SSAILR(QWidget):
         output_dir = "figures"
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
+        
+        # Display input directory
+        print(f"Current graph directory: {input_dir}.")
 
         # Generate histos
         for i in range(1, 4):
@@ -50,9 +53,9 @@ class SSAILR(QWidget):
                 continue
                 file_path = ""
             elif i == 2:
-                file_path = f"{input_dir}/pipeline.output"
+                file_path = f"{input_dir}"
             else:    
-                file_path = f"{input_dir}/pipeline.output"
+                file_path = f"{input_dir}"
 
             run_script = f"python3 graphs.py {file_path} {i}"
             print(run_script)
