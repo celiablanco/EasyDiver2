@@ -100,20 +100,12 @@ elif graph == "2":
             lengths.append(length)
             reads_counts.append(reads_count)
         plt.figure(figsize=(12, 8))
+
         # Plotting the histogram without log scale
-        plt.subplot(2, 1, 1)
         plt.bar(lengths, reads_counts, color="blue")
         plt.xlabel('Length')
         plt.ylabel('Reads Count')
         plt.title('Read Length Histogram for ' + file)
-
-        # Plotting the histogram with log scale
-        plt.subplot(2, 1, 2)
-        plt.bar(lengths, reads_counts, color="blue")
-        plt.xlabel('Length')
-        plt.ylabel('Reads Count')
-        plt.title('Read Length Histogram (Log Scale)')
-        plt.yscale('log')  # Log scale the y-axis
 
         plt.tight_layout()  # Adjust spacing between subplots
         # plt.show()

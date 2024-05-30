@@ -31,7 +31,6 @@ class SSAILR(QWidget):
                 if res.poll() is not None:
                     break
                 if output:
-                    print(output.strip())
                     progress = min(progress + 1, 100)
                     progress_bar.setValue(progress)
 
