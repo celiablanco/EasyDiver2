@@ -35,6 +35,7 @@ class MainMenu(QWidget):
     def run_all(self):
         self.easy_diver = EasyDiver()
         self.easy_diver.show()
+        self.close()
 
     def display_help_message(self):
         help_text = """
