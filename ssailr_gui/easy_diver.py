@@ -99,7 +99,7 @@ class EasyDiver(QWidget):
             self.input_dir_edit.setText(directory)
     
     def create_graphs(self):
-        dir_path = "data/pipeline.output/histos"
+        dir_path = "pipeline.output/histos"
         if os.path.exists(dir_path):
             print(f"The directory '{dir_path}' exists.")
         else:
@@ -125,7 +125,7 @@ class EasyDiver(QWidget):
         if self.output_dir_edit.text():
             run_script += f" -o {self.output_dir_edit.text()}"
         else:
-            output_dir = "data/pipeline.output"
+            output_dir = "pipeline.output"
 
         if self.forward_primer_edit.text():
             run_script += f" -p {self.forward_primer_edit.text()}"

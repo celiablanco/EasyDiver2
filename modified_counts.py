@@ -260,6 +260,7 @@ def find_enrichments():
             dir_path = sys.argv[i + 1]
             i += 2
         elif sys.argv[i] == "-out" and i + 1 < len(sys.argv):
+            out_file = sys.argv[i + 1]
             i += 2
         elif sys.argv[i] == "-count" and i + 1 < len(sys.argv):
             counts_type = sys.argv[i + 1]

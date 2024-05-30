@@ -49,9 +49,9 @@ class SSAILR(QWidget):
                 continue
                 file_path = ""
             elif i == 2:
-                file_path = "data/pipeline.output"
+                file_path = "pipeline.output"
             else:    
-                file_path = "data/pipeline.output"
+                file_path = "pipeline.output"
 
             run_script = f"python3 graphs.py {file_path} {i}"
             print(run_script)
