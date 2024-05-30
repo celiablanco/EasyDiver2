@@ -172,7 +172,7 @@ class EasyDiver(QWidget):
 
                 # Run SSAILR
                 if self.run_ssailr.isChecked():
-                    self.ssailr.calculate(counts_type, output_dir)
+                    self.ssailr.calculate(counts_type, output_dir, self.progress_bar)
 
                 # Generate Selection Count Reads
                 self.ssailr.generate_histo_graphs(counts_type, output_dir)

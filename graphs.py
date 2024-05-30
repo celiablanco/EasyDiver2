@@ -174,7 +174,6 @@ elif graph == "3":
 
     # Iterate through different AA types
     for key in unique_aa.keys():
-        print(key)
         if key == "neg":
             color = "green"
         elif key == "in":
