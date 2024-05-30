@@ -109,7 +109,7 @@ elif graph == "2":
 
         plt.tight_layout()  # Adjust spacing between subplots
         # plt.show()
-        plt.savefig(f"{histos}" + file[:file.rfind(".")] + ".png", dpi=500)
+        plt.savefig(f"{histos}/" + file[:file.rfind(".")] + ".png", dpi=500)
         plt.close()
 # Line graph
 elif graph == "3":
