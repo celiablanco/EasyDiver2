@@ -21,6 +21,7 @@ class SSAILR(QWidget):
         print(run_script)
         try:
             progress = 0
+            progress_bar.setValue(progress)
             res = subprocess.Popen(run_script.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
             
             while True:
@@ -31,7 +32,6 @@ class SSAILR(QWidget):
                     break
                 if output:
                     print(output.strip())
-                    # Update progress bar as needed
                     progress = min(progress + 1, 100)
                     progress_bar.setValue(progress)
 
