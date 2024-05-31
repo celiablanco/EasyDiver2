@@ -10,6 +10,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import re
 import sys
+import pandas as pd
 
 file_path = sys.argv[1] # "scripts_enrichments/res.txt", "output_large"
 graph = sys.argv[2] # Selection between 1 (scatterplot), 2 (histogram), and 3 (AA counts)
@@ -46,37 +47,61 @@ sns.set_theme(style="darkgrid")
 
 # Scatterplot
 if graph == "1":
+    # Check if the file exists
+    if not os.path.exists(file_path):
+        print(f"File not found: {file_path}")
+        exit()
+    
+    # Set res file dir
+    res_dir = f"{file_path}/modified_counts/"
+
+    # Initialize lists to store the values
     e_out_values = []
     e_neg_values = []
 
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-        start = 7 # Hard-coded
-        for line in lines[start:]:
-            # Split the line by whitespace to get individual columns
-            columns = line.split()
-            if "-" in (columns[-3], columns[-4], columns[-5], columns[-6]):
+    # Open and read the file
+    for res_file in os.listdir(res_dir):
+        with open(f"{res_dir}/{res_file}", 'r') as file:
+            lines = file.readlines()
+
+        # Extracting relevant data from the lines
+        start_index = 7
+        for line in lines[start_index:]:
+            columns = line.split(',')
+            if '-' in (columns[-3], columns[-4], columns[-5], columns[-6]):
                 continue
-            # Calculate the measured e_out and e_neg values and convert them to float
-            e_out = (float(re.sub(r'[^\d.]', '', columns[-5])) + float(re.sub(r'[^\d.]', '', columns[-6]))) / 2
-            e_neg = (float(re.sub(r'[^\d.]', '', columns[-3])) + float(re.sub(r'[^\d.]', '', columns[-4]))) / 2
-            # Append the values to their respective lists
-            e_out_values.append(e_out)
-            e_neg_values.append(e_neg)
+            try:
+                # Calculate e_out and e_neg values
+                e_out = (float(re.sub(r'[^\d.]', '', columns[-5])) + float(re.sub(r'[^\d.]', '', columns[-6]))) / 2
+                e_neg = (float(re.sub(r'[^\d.]', '', columns[-3])) + float(re.sub(r'[^\d.]', '', columns[-4]))) / 2
 
-    # Plotting the scatter plot
-    x_filtered, y_filtered = remove_outliers(e_neg_values, e_out_values)
-    plt.scatter(x_filtered, y_filtered, s=10)
-    plt.plot(x_filtered, x_filtered, color='blue', linestyle='dotted', linewidth=1)
+                # Append to respective lists
+                e_out_values.append(e_out)
+                e_neg_values.append(e_neg)
+            except ValueError as ve:
+                print(f"Skipping line due to value error: {line}")
+                continue
 
-    # Adding labels and title
-    plt.xlabel('e_neg')
-    plt.ylabel('e_out')
-    plt.title('e_neg vs e_out Scatter Plot')
-    plt.savefig("figures/" + file_path[file_path.rfind("/") + 1:file_path.rfind(".")] + ".png", dpi=500)
-    # Show the plot
-    # plt.show()
-    plt.close()
+        # Remove outliers
+        x_filtered, y_filtered = remove_outliers(e_neg_values, e_out_values)
+
+        # Perform linear regression
+        slope, intercept = np.polyfit(x_filtered, y_filtered, 1)
+        fit_line = np.poly1d([slope, intercept])
+
+        # Create scatter plot
+        plt.figure(figsize=(10, 6))
+        plt.scatter(x_filtered, y_filtered, s=10)
+        plt.plot(x_filtered, fit_line(x_filtered), color='blue', linestyle='dotted', linewidth=1)
+
+        # Adding labels and title
+        plt.xlabel('e_neg')
+        plt.ylabel('e_out')
+        plt.title('e_neg vs e_out Scatter Plot')
+
+        # Save the plot as an image
+        output_file = os.path.join(f"{file_path}/figures/", f"{os.path.splitext(res_file)[0]}.png")
+        plt.savefig(output_file, dpi=500)
 
 # Histogram
 elif graph == "2":
@@ -109,9 +134,10 @@ elif graph == "2":
         plt.title('Read Length Histogram for ' + file)
 
         plt.tight_layout()  # Adjust spacing between subplots
-        # plt.show()
+
         plt.savefig(f"{figures}/" + file[:file.rfind(".")] + ".png", dpi=500)
         plt.close()
+        
 # Line graph
 elif graph == "3":
     figures = os.path.join(file_path, "figures")

@@ -55,15 +55,7 @@ class SSAILR(QWidget):
 
         # Generate histos
         for i in range(1, 4):
-            if i == 1:
-                continue
-                file_path = ""
-            elif i == 2:
-                file_path = f"{input_dir}"
-            else:    
-                file_path = f"{input_dir}"
-
-            run_script = f"python3 graphs.py {file_path} {i}"
+            run_script = f"python3 graphs.py {input_dir} {i}"
             print(run_script)
 
             try:
