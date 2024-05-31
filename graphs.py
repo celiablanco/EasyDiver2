@@ -167,11 +167,11 @@ elif graph == "3":
     # Iterate through different AA types
     for key in unique_aa.keys():
         if key == "neg":
-            color = "green"
-        elif key == "in":
             color = "red"
+        elif key == "in":
+            color = "green"
         else:
-            color = "orange"
+            color = "blue"
             
         label_u = "Unique AA " + key
         label_t = "Total AA " + key
