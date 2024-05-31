@@ -169,9 +169,9 @@ elif graph == "3":
         if key == "neg":
             color = "red"
         elif key == "in":
-            color = "green"
+            color = "orange"
         else:
-            color = "blue"
+            color = "green"
             
         label_u = "Unique AA " + key
         label_t = "Total AA " + key
