@@ -81,6 +81,7 @@ if graph == "1":
 # Histogram
 elif graph == "2":
     histos = os.path.join(file_path, "histos")
+    figures = os.path.join(file_path, "figures")
     files = [file for file in os.listdir(histos) if file.endswith(".txt")] # Find data for histos
 
     for file in files:
@@ -109,11 +110,11 @@ elif graph == "2":
 
         plt.tight_layout()  # Adjust spacing between subplots
         # plt.show()
-        plt.savefig(f"{histos}/" + file[:file.rfind(".")] + ".png", dpi=500)
+        plt.savefig(f"{figures}/" + file[:file.rfind(".")] + ".png", dpi=500)
         plt.close()
 # Line graph
 elif graph == "3":
-    histos = os.path.join(file_path, "histos")
+    figures = os.path.join(file_path, "figures")
     file_path += "/log.txt"
 
     # Lists to store the data
@@ -193,4 +194,4 @@ elif graph == "3":
     plt.tight_layout()
 
     # Save the plot as an image with high resolution (DPI: 500)
-    plt.savefig(f"{histos}/Selection Counts Reads.png", dpi=500)
+    plt.savefig(f"{figures}/Selection Counts Reads.png", dpi=500)

@@ -46,7 +46,7 @@ class SSAILR(QWidget):
     
     def generate_histo_graphs(self, counts_type, input_dir):
         # Check if figures directory exists
-        output_dir = "figures"
+        output_dir = f"{input_dir}/figures"
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         
