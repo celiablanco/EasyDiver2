@@ -1,11 +1,12 @@
-<!-- ![EasyDIVER Logo](logo.png) -->
+<!-- ![SSAILR Logo](ssailr_logo.png) -->
 
 # SSAILR
-This is the README document for the combined EasyDIVER and SSAILR pipeline for pre-processing and analyzing HTS reads from _in vitro_ selection experiments. EasyDIVER can be used to process nucleotides or amino acids sequencing dat and SSAILR can be used to analyze the processed data.
+This is the README document for the SSAILR pipeline for pre-processing and analyzing HTS reads from _in vitro_ selection experiments. 
 
 # Usage
 
-Please consult the EasyDIVER [manual](https://github.com/ichen-lab-ucsb/EasyDIVER/blob/master/MANUAL.pdf) for the pre-processing part of the pipeline. EasyDIVER can be found  
+
+Please consult the EasyDIVER [documentation](https://github.com/ichen-lab-ucsb/EasyDIVER) for the pre-processing part of the pipeline. 
 
 # Dependencies
 The pipeline script was written to run on Unix-based systems, like Linux, Ubuntu, and MacOS. Windows 10 also has a [Linux subsystem](https://docs.microsoft.com/en-us/windows/wsl/faq).
@@ -34,6 +35,19 @@ All input files must be:
 3. Named using the standard Illumina naming scheme: sample-name_S#_L00#_R#_001.fastq
 4. In either .fastq or .fastq.gz extensions.
 
+### Naming scheme:
+
+For each round of selection, files must be labeled as "R-type-X", where R is the round number, type is either in, out or neg (for input, output and negative control), and X can be any string that helps the user identify which sample it corresponds to. For example, for a 2 rounds experiment with input, output and negative control, files names should look like:
+
+1-in-Sample1_L001_R1_001.fastq.gz\
+1-in-Sample1_L001_R2_001.fastq.gz\
+1-out-Sample2_L001_R1_001.fastq.gz\
+1-out-Sample2_L001_R2_001.fastq.gz\
+2-in-Sample3_L001_R1_001.fastq.gz\
+2-in-Sample3_L001_R2_001.fastq.gz\
+2-out-Sample4_S10_L001_R1_001.fastq.gz\
+2-out-Sample4_S10_L001_R2_001.fastq.gz\
+
 # Test dataset
 
 A test dataset is provided. The test data corresponds to two samples obtained from a real experiment of in vitro evolution of mRNA displayed peptides. 
@@ -55,5 +69,5 @@ Run the ./autogen.sh build step again. At this point, you might get many ‘warn
 
 # Citation
 
-Celia Blanco<sup>\*</sup>, Samuel Verbanic<sup>\*</sup>, Burckhard Seelig and Irene A. Chen. [EasyDIVER: a pipeline for assembling and counting high throughput sequencing data from in vitro evolution of nucleic acids or peptides.](https://link.springer.com/article/10.1007/s00239-020-09954-0) J Mol Evol 88, 477–481 (2020).
+TBD
 
