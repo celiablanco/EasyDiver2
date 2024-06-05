@@ -1,4 +1,4 @@
-![SSAILR Logo](logo2.png)
+![SSAILR Logo](logoo.png)
 
 # SSAILR
 This is the README document for the EasyDIVER + SSAILR pipeline for pre-processing and analyzing HTS reads from _in vitro_ selection experiments. 
