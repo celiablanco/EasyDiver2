@@ -147,7 +147,6 @@ class EasyDiver(QWidget):
                 if res.poll() is not None:
                     break
 
-                print(f"Progress: {progress}")
                 self.progress_bar.setValue(progress)
                 progress += 1
 
