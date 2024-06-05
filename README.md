@@ -46,7 +46,7 @@ For each round of selection, files must be labeled as "R-type-X", where R is the
 2-in-Sample3_L001_R1_001.fastq.gz\
 2-in-Sample3_L001_R2_001.fastq.gz\
 2-out-Sample4_S10_L001_R1_001.fastq.gz\
-2-out-Sample4_S10_L001_R2_001.fastq.gz\
+2-out-Sample4_S10_L001_R2_001.fastq.gz
 
 # Test dataset
 
