@@ -1,5 +1,7 @@
 ![ED2 Logo](logo.png)
 
+
+
 # EasyDIVER 2.0
 This is the README document for the EasyDIVER 2.0 pipeline for pre-processing and analyzing HTS reads from _in vitro_ selection experiments. 
 
