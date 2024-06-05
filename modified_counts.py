@@ -299,9 +299,9 @@ def find_enrichments():
             # Run the modified_counts_bash.sh script with the appropriate arguments
             neg_files_exist = any(fnmatch.fnmatch(file, neg_format) for file in os.listdir(counts_dir))
             if not neg_files_exist:
-                run_enrichment_analysis(out_file=glob.glob(os.path.join(counts_dir, str(i) + "-out*" + "_" + counts_type + ".txt")), res_file=f"modified_counts/{i}-res.csv")
+                run_enrichment_analysis(out_file=glob.glob(os.path.join(counts_dir, str(i) + "-out*" + "_" + counts_type + ".txt"))[0], res_file=f"modified_counts/{i}-res.csv")
             else:
-                run_enrichment_analysis(out_file=glob.glob(os.path.join(counts_dir, str(i) + "-out*" + "_" + counts_type + ".txt")), neg_file=glob.glob(os.path.join(counts_dir, str(i + 1) + "-neg*" + "_" + counts_type + ".txt")), res=glob.glob(os.path.join(outdir, "modified_counts", str(i) + "-res.csv")))
+                run_enrichment_analysis(out_file=glob.glob(os.path.join(counts_dir, str(i) + "-out*" + "_" + counts_type + ".txt"))[0], res_file=f"modified_counts/{i}-res.csv", neg_file=glob.glob(os.path.join(counts_dir, str(i + 1) + "-neg*" + "_" + counts_type + ".txt")))
             
             # Calculate progress
             progress = i * 100 / (max_round - 1)
@@ -312,9 +312,9 @@ def find_enrichments():
             # Run the modified_counts_bash.sh script with the appropriate arguments
             neg_files_exist = any(fnmatch.fnmatch(file, neg_format) for file in os.listdir(counts_dir))
             if not neg_files_exist:
-                run_enrichment_analysis(out_file=glob.glob(os.path.join(counts_dir, str(i) + "-out*" + "_" + counts_type + ".txt"))[0], in_file=glob.glob(os.path.join(counts_dir, str(i) + "-in*" + "_" + counts_type + ".txt")[0], res_file=f"modified_counts/{i}-res.csv"))
+                run_enrichment_analysis(out_file=glob.glob(os.path.join(counts_dir, str(i) + "-out*" + "_" + counts_type + ".txt"))[0], in_file=glob.glob(os.path.join(counts_dir, str(i) + "-in*" + "_" + counts_type + ".txt"))[0], res_file=f"modified_counts/{i}-res.csv")
             else:
-                run_enrichment_analysis(out_file=glob.glob(os.path.join(counts_dir, str(i) + "-out*" + "_" + counts_type + ".txt"))[0], in_file=glob.glob(os.path.join(counts_dir, str(i) + "-in*" + "_" + counts_type + ".txt"))[0], neg_file=glob.glob(os.path.join(counts_dir, str(i) + "-neg*" + "_" + counts_type + ".txt"))[0], res_file=f"{os.path.join(outdir, 'modified_counts', str(i) + '-res.csv')}")
+                run_enrichment_analysis(out_file=glob.glob(os.path.join(counts_dir, str(i) + "-out*" + "_" + counts_type + ".txt"))[0], in_file=glob.glob(os.path.join(counts_dir, str(i) + "-in*" + "_" + counts_type + ".txt"))[0], res_file=f"modified_counts/{i}-res.csv", neg_file=glob.glob(os.path.join(counts_dir, str(i) + "-neg*" + "_" + counts_type + ".txt"))[0])
 
         progress = i * 100 / max_round
         print("(Approx.) Progress:", progress, "%")

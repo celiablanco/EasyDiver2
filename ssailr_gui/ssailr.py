@@ -36,7 +36,7 @@ class SSAILR(QWidget):
 
             if res.returncode == 0:
                 progress_bar.setValue(100)
-                QMessageBox.information(self, "Success", "SSAILR completed successfully.")
+                QMessageBox.information(self, "Success", "SSAILR completed successfully. Now wait while we generate graphs.")
             else:
                 error_message = res.stderr.read()
                 QMessageBox.critical(self, "Error", f"An error occurred: {error_message}")
@@ -44,18 +44,13 @@ class SSAILR(QWidget):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")
     
-    def generate_histo_graphs(self, counts_type, input_dir):
-        # Check if figures directory exists
-        output_dir = f"{input_dir}/figures"
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
-        
+    def generate_graphs(self, counts_type, output_dir):
         # Display input directory
-        print(f"Current graph directory: {input_dir}.")
+        print(f"Current graph directory: {output_dir}.")
 
         # Generate histos
         for i in range(1, 4):
-            run_script = f"python3 graphs.py {input_dir} {i}"
+            run_script = f"python3 graphs.py {output_dir} {i}"
             print(run_script)
 
             try:
@@ -68,7 +63,8 @@ class SSAILR(QWidget):
                         break
 
                 if res.returncode == 0:
-                    QMessageBox.information(self, "Success", "Graphs generated successfully.")
+                    if i == 3:
+                        QMessageBox.information(self, "Success", "Graphs generated successfully.")
                 else:
                     error_message = res.stderr.read()
                     QMessageBox.critical(self, "Error", f"An error occurred: {error_message}")

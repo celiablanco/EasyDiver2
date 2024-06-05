@@ -69,7 +69,7 @@ class EasyDiver(QWidget):
         layout.addWidget(self.extra_flags_edit)
         
         # Option for SSAILR
-        self.run_ssailr = QCheckBox("Run SSAILR")
+        self.run_ssailr = QCheckBox("Run SSAILR (enrichment analysis)")
         layout.addWidget(self.run_ssailr)
 
         # Progress bar
@@ -97,22 +97,6 @@ class EasyDiver(QWidget):
         directory = QFileDialog.getExistingDirectory(self, 'Select Directory')
         if directory:
             self.input_dir_edit.setText(directory)
-    
-    def create_graphs(self):
-        dir_path = "pipeline.output/histos"
-        if os.path.exists(dir_path):
-            print(f"The directory '{dir_path}' exists.")
-        else:
-            raise FileNotFoundError(f"The directory '{dir_path}' does not exist.")
-
-        for i in range(1, 4):
-            run_script = f"python3 graphs.py {dir_path} {i}"
-        
-        res = subprocess.Popen(run_script.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-
-        if not res.returncode == 0:
-            error_message = res.stderr.read()
-            QMessageBox.critical(self, "Error", f"An error occurred: {error_message}")
 
     def submit(self):
         run_script = "bash easydiver.sh "
@@ -124,6 +108,7 @@ class EasyDiver(QWidget):
         
         if self.output_dir_edit.text():
             run_script += f" -o {self.output_dir_edit.text()}"
+            output_dir = {self.output_dir_edit.text()}
         else:
             output_dir = f"{self.input_dir_edit.text()}/pipeline.output"
 
@@ -168,14 +153,14 @@ class EasyDiver(QWidget):
 
             if res.returncode == 0:
                 self.progress_bar.setValue(100)
-                QMessageBox.information(self, "Success", "EasyDiver completed successfully.")
+                QMessageBox.information(self, "Success", "EasyDiver completed successfully. Now wait while we calculate enrichment analysis.")
 
                 # Run SSAILR
                 if self.run_ssailr.isChecked():
                     self.ssailr.calculate(counts_type, output_dir, self.progress_bar)
 
                 # Generate Selection Count Reads
-                self.ssailr.generate_histo_graphs(counts_type, output_dir)
+                self.ssailr.generate_graphs(counts_type, output_dir)
                 
                 # Close EasyDiver + SSAILR Window
                 self.close()
