@@ -1,10 +1,9 @@
 ![SSAILR Logo](logo.png)
 
 # SSAILR
-This is the README document for the SSAILR pipeline for pre-processing and analyzing HTS reads from _in vitro_ selection experiments. 
+This is the README document for the EasyDIVER + SSAILR pipeline for pre-processing and analyzing HTS reads from _in vitro_ selection experiments. 
 
 # Usage
-
 
 Please consult the EasyDIVER [documentation](https://github.com/ichen-lab-ucsb/EasyDIVER) for the pre-processing part of the pipeline. 
 
@@ -32,12 +31,12 @@ All input files must be:
     
 1. Located in the same directory (even reads from separate lanes).
 2. In FASTQ format
-3. Named using the standard Illumina naming scheme: sample-name_S#_L00#_R#_001.fastq
-4. In either .fastq or .fastq.gz extensions.
+3. In either .fastq or .fastq.gz extensions.
+4. Files must be named using the standard Illumina naming scheme: sample-name_S#_L00#_R#_001.fastq
 
-### Naming scheme:
+### Additionally, If running SSAILR, the naming scheme must follow:
 
-For each round of selection, files must be labeled as "R-type-X", where R is the round number, type is either in, out or neg (for input, output and negative control), and X can be any string that helps the user identify which sample it corresponds to. For example, for a 2 rounds experiment with input, output and negative control, files names should look like:
+For each round of selection, files must be labeled as "R-type-sample-name_S#_L00#_R#_001.fastq", where R is the round number and type is either in, out or neg (for input, output and negative control). For example, for a 2 rounds experiment with input, output and negative control, files names should look like:
 
 1-in-Sample1_L001_R1_001.fastq.gz\
 1-in-Sample1_L001_R2_001.fastq.gz\
