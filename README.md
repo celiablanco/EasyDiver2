@@ -7,7 +7,7 @@ This is the README document for the EasyDIVER 2.0 pipeline for pre-processing an
 
 Please consult the EasyDIVER [documentation](https://github.com/ichen-lab-ucsb/EasyDIVER) for the pre-processing part of the pipeline. 
 
-# Dependencies
+# Dependencies  --- UPDATE ACCORDINGLY 🔴 🔴 🔴
 The pipeline script was written to run on Unix-based systems, like Linux, Ubuntu, and MacOS. Windows 10 also has a [Linux subsystem](https://docs.microsoft.com/en-us/windows/wsl/faq).
 
 To use the pipeline, first install the two dependencies: [Python](https://www.python.org/downloads/) and [PANDASeq](https://github.com/neufeld/pandaseq/wiki/Installation). We recommend using the Anaconda distribution of python, and adding the Bioconda channel to Anaconda's package manager, conda. See the [Anaconda documentation](https://docs.anaconda.com/anaconda/install/) for installation. After installing Anaconda with [Bioconda](https://bioconda.github.io/), PANDASeq is easily installed using conda with:
