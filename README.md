@@ -1,4 +1,4 @@
-<!-- ![SSAILR Logo](ssailr_logo.png) -->
+![SSAILR Logo](logo.png)
 
 # SSAILR
 This is the README document for the SSAILR pipeline for pre-processing and analyzing HTS reads from _in vitro_ selection experiments. 
