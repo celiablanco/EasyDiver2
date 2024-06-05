@@ -108,7 +108,7 @@ class EasyDiver(QWidget):
         
         if self.output_dir_edit.text():
             run_script += f" -o {self.output_dir_edit.text()}"
-            output_dir = f"{self.output_dir_edit.text()}"
+            output_dir = f"{self.input_dir_edit.text()}/{self.output_dir_edit.text()}"
         else:
             output_dir = f"{self.input_dir_edit.text()}/pipeline.output"
 
