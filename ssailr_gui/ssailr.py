@@ -17,8 +17,8 @@ class SSAILR(QWidget):
             run_script += f" -dir {output_dir}"
         
         run_script += f" -count {counts_type}"
-        
         print(run_script)
+        
         try:
             progress = 0
             progress_bar.setValue(progress)
