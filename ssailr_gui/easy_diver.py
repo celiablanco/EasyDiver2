@@ -229,7 +229,7 @@ class EasyDiver(QWidget):
 
             if res.returncode == 0:
                 self.progress_bar.setValue(100)
-                QMessageBox.information(self, "Success", "EasyDiver completed successfully. Now wait while we calculate enrichment analysis.")
+                QMessageBox.information(self, "Success", "EasyDiver completed successfully. Now wait while we perform the next step.")
 
                 # Run SSAILR
                 if self.run_ssailr.isChecked():
@@ -243,9 +243,10 @@ class EasyDiver(QWidget):
                     else:
                         generate_scatter_plot = False
                 else:
-                    generate_histos = False               
-                
-                self.ssailr.generate_graphs(counts_type, output_dir, generate_scatter_plot, generate_histos)
+                    generate_histos = False
+                    
+                if generate_scatter_plot or generate_histos:
+                    self.ssailr.generate_graphs(counts_type, output_dir, generate_scatter_plot, generate_histos)
                 
                 # Close EasyDiver + SSAILR Window
                 self.close()

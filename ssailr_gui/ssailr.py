@@ -36,7 +36,7 @@ class SSAILR(QWidget):
 
             if res.returncode == 0:
                 progress_bar.setValue(100)
-                QMessageBox.information(self, "Success", "SSAILR completed successfully. Now wait while we generate graphs.")
+                QMessageBox.information(self, "Success", "SSAILR completed successfully. Now wait while we perform the next step.")
             else:
                 error_message = res.stderr.read()
                 QMessageBox.critical(self, "Error", f"An error occurred: {error_message}")
