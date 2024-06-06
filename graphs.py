@@ -103,14 +103,26 @@ def generate_graphs():
             plt.scatter(x_filtered, y_filtered, s=10)
             plt.plot(x_filtered, fit_line(x_filtered), color='blue', linestyle='dotted', linewidth=1)
 
+            # Plot the regression line
+            plt.plot(x_filtered, fit_line(x_filtered), color='blue', linestyle='dotted', linewidth=1, label=f'Regression Line (slope = {slope:.2f})')
+
+            # Plot the diagonal line y = x
+            plt.plot(x_filtered, x_filtered, color='red', linestyle='-', linewidth=1, label='y = x')
+
             # Adding labels and title
             plt.xlabel('e_neg')
             plt.ylabel('e_out')
             plt.title('e_neg vs e_out Scatter Plot')
 
+            # Add legend
+            plt.legend()
+            
             # Save the plot as an image
-            output_file = os.path.join(f"{figures}/" , f"{os.path.splitext(res_file)[0]}.png")
+            output_file = os.path.join(f"{file_path}/figures", f"{os.path.splitext(res_file)[0]}.png")
+            os.makedirs(os.path.dirname(output_file), exist_ok=True)
             plt.savefig(output_file, dpi=500)
+            plt.close()
+
 
     # Histogram
     elif graph == "2":
