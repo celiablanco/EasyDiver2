@@ -126,7 +126,7 @@ class EasyDiver(QWidget):
         layout.addLayout(retain_layout)
 
         # Option for SSAILR
-        self.run_ssailr = QCheckBox("Run Eenrichment Analysis)")
+        self.run_ssailr = QCheckBox("Run Enrichment Analysis")
         ssailr_tooltip_icon = QLabel()
         ssailr_tooltip_icon.setPixmap(QPixmap('ssailr_gui/assets/question_icon.png').scaled(20, 20))
         ssailr_tooltip_icon.setToolTip("Check this box to run SSAILR for enrichment analysis.")
