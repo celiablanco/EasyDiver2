@@ -136,6 +136,17 @@ class EasyDiver(QWidget):
         ssailr_layout.addWidget(ssailr_tooltip_icon)
         layout.addLayout(ssailr_layout)
 
+        # Option for plots generation
+        self.generate_plots = QCheckBox("Generate Plots")
+        generate_plots_tooltip_icon = QLabel()
+        generate_plots_tooltip_icon.setPixmap(QPixmap('ssailr_gui/assets/question_icon.png').scaled(20, 20))
+        generate_plots_tooltip_icon.setToolTip("Check to generate plots from the data.")
+
+        generate_plots_layout = QHBoxLayout()
+        generate_plots_layout.addWidget(self.generate_plots)
+        generate_plots_layout.addWidget(generate_plots_tooltip_icon)
+        layout.addLayout(generate_plots_layout)
+
         # Progress bar
         self.progress_bar = QProgressBar()
         layout.addWidget(self.progress_bar)
@@ -224,8 +235,17 @@ class EasyDiver(QWidget):
                 if self.run_ssailr.isChecked():
                     self.ssailr.calculate(counts_type, output_dir, self.progress_bar)
 
-                # Generate Selection Count Reads
-                self.ssailr.generate_graphs(counts_type, output_dir)
+                # Generate plots
+                if self.generate_plots.isChecked():
+                    generate_histos = True
+                    if self.run_ssailr.isChecked():
+                        generate_scatter_plot = True
+                    else:
+                        generate_scatter_plot = False
+                else:
+                    generate_histos = False               
+                
+                self.ssailr.generate_graphs(counts_type, output_dir, generate_scatter_plot, generate_histos)
                 
                 # Close EasyDiver + SSAILR Window
                 self.close()

@@ -44,12 +44,18 @@ class SSAILR(QWidget):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")
     
-    def generate_graphs(self, counts_type, output_dir):
+    def generate_graphs(self, counts_type, output_dir, generate_scatter_plot, generate_histos):
         # Display input directory
         print(f"Current graph directory: {output_dir}.")
 
         # Generate histos
         for i in range(1, 4):
+            if not generate_scatter_plot and i == 1:
+                continue
+            
+            if not generate_histos and (i == 2 or i == 3):
+                continue
+            
             run_script = f"python3 graphs.py {output_dir} {i}"
             print(run_script)
 
