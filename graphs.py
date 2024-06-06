@@ -81,8 +81,8 @@ def generate_graphs():
                     continue
                 try:
                     # Calculate e_out and e_neg values
-                    e_out = (float(re.sub(r'[^\d.]', '', columns[-5])) + float(re.sub(r'[^\d.]', '', columns[-6]))) / 2
-                    e_neg = (float(re.sub(r'[^\d.]', '', columns[-3])) + float(re.sub(r'[^\d.]', '', columns[-4]))) / 2
+                    e_out = float(re.sub(r'[^\d.]', '', columns[-6]))
+                    e_neg = float(re.sub(r'[^\d.]', '', columns[-4]))
 
                     # Append to respective lists
                     e_out_values.append(e_out)
@@ -122,7 +122,6 @@ def generate_graphs():
             os.makedirs(os.path.dirname(output_file), exist_ok=True)
             plt.savefig(output_file, dpi=500)
             plt.close()
-
 
     # Histogram
     elif graph == "2":
