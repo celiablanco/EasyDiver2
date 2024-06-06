@@ -55,7 +55,7 @@ A test dataset is provided. The test data corresponds to two samples obtained fr
      
 # Reporting bugs
 
-Please report any bugs to Celia Blanco (celia.blanco@bmsis.org). 
+Please report any bugs to Celia Blanco (celia.blanco@bmsis.org) and Pramesh Sharma (prameshsharma25@gmail.com). 
 
 When reporting bugs, please include the full output printed in the terminal when running the pipeline. 
 
