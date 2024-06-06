@@ -1,6 +1,7 @@
 import os
 import subprocess
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QCheckBox, QFileDialog, QPushButton, QMessageBox, QProgressBar
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QCheckBox, QFileDialog, QPushButton, QMessageBox, QProgressBar, QTextEdit
+from PyQt5.QtGui import QIcon, QPixmap
 
 from directory_edit import ClickableDirectoryEdit
 from ssailr import SSAILR
@@ -23,8 +24,15 @@ class EasyDiver(QWidget):
         self.input_label = QLabel('Input Directory Path:')
         self.input_dir_edit = ClickableDirectoryEdit()
         self.input_dir_edit.clicked.connect(self.browse_input)
-        layout.addWidget(self.input_label)
-        layout.addWidget(self.input_dir_edit)
+        input_tooltip_icon = QLabel()
+        input_tooltip_icon.setPixmap(QPixmap('ssailr_gui/assets/question_icon.png').scaled(20, 20))
+        input_tooltip_icon.setToolTip("Select the directory containing the input files.")
+        
+        input_layout = QHBoxLayout()
+        input_layout.addWidget(self.input_label)
+        input_layout.addWidget(self.input_dir_edit)
+        input_layout.addWidget(input_tooltip_icon)
+        layout.addLayout(input_layout)
 
         # Optional parameters
         optional_label = QLabel("OPTIONAL")
@@ -33,44 +41,100 @@ class EasyDiver(QWidget):
         # Option -o
         self.output_label = QLabel('Output Directory Filepath:')
         self.output_dir_edit = QLineEdit()
-        layout.addWidget(self.output_label)
-        layout.addWidget(self.output_dir_edit)
+        output_tooltip_icon = QLabel()
+        output_tooltip_icon.setPixmap(QPixmap('ssailr_gui/assets/question_icon.png').scaled(20, 20))
+        output_tooltip_icon.setToolTip("Specify the directory to save output files. If not provided, it defaults to the input directory with '/pipeline.output' appended.")
+        
+        output_layout = QHBoxLayout()
+        output_layout.addWidget(self.output_label)
+        output_layout.addWidget(self.output_dir_edit)
+        output_layout.addWidget(output_tooltip_icon)
+        layout.addLayout(output_layout)
 
         # Option -p
         self.forward_primer_label = QLabel('Forward Primer Sequence Extraction:')
         self.forward_primer_edit = QLineEdit()
-        layout.addWidget(self.forward_primer_label)
-        layout.addWidget(self.forward_primer_edit)
+        forward_primer_tooltip_icon = QLabel()
+        forward_primer_tooltip_icon.setPixmap(QPixmap('ssailr_gui/assets/question_icon.png').scaled(20, 20))
+        forward_primer_tooltip_icon.setToolTip("Enter the forward primer sequence for extraction.")
+        
+        forward_primer_layout = QHBoxLayout()
+        forward_primer_layout.addWidget(self.forward_primer_label)
+        forward_primer_layout.addWidget(self.forward_primer_edit)
+        forward_primer_layout.addWidget(forward_primer_tooltip_icon)
+        layout.addLayout(forward_primer_layout)
 
         # Option -q
         self.reverse_primer_label = QLabel('Reverse Primer Sequence Extraction:')
         self.reverse_primer_edit = QLineEdit()
-        layout.addWidget(self.reverse_primer_label)
-        layout.addWidget(self.reverse_primer_edit)
-
-        # Option -a
-        self.translate_check = QCheckBox('Translate to Amino Acids:')
-        layout.addWidget(self.translate_check)
-
-        # Option -r
-        self.retain_check = QCheckBox('Retain Individual Lane Outputs:')
-        layout.addWidget(self.retain_check)
+        reverse_primer_tooltip_icon = QLabel()
+        reverse_primer_tooltip_icon.setPixmap(QPixmap('ssailr_gui/assets/question_icon.png').scaled(20, 20))
+        reverse_primer_tooltip_icon.setToolTip("Enter the reverse primer sequence for extraction.")
+        
+        reverse_primer_layout = QHBoxLayout()
+        reverse_primer_layout.addWidget(self.reverse_primer_label)
+        reverse_primer_layout.addWidget(self.reverse_primer_edit)
+        reverse_primer_layout.addWidget(reverse_primer_tooltip_icon)
+        layout.addLayout(reverse_primer_layout)
 
         # Option -T
         self.threads_label = QLabel('Number of Threads:')
         self.threads_edit = QLineEdit()
-        layout.addWidget(self.threads_label)
-        layout.addWidget(self.threads_edit)
+        threads_tooltip_icon = QLabel()
+        threads_tooltip_icon.setPixmap(QPixmap('ssailr_gui/assets/question_icon.png').scaled(20, 20))
+        threads_tooltip_icon.setToolTip("Specify the number of threads to use for processing.")
+        
+        threads_layout = QHBoxLayout()
+        threads_layout.addWidget(self.threads_label)
+        threads_layout.addWidget(self.threads_edit)
+        threads_layout.addWidget(threads_tooltip_icon)
+        layout.addLayout(threads_layout)
 
         # Option -e
-        self.extra_flags_label = QLabel('Extra Flags for PANDASeq (use quotes, e.g. \"-L 50\"):')
+        self.extra_flags_label = QLabel('Extra Flags for PANDASeq (use quotes, e.g. "-L 50"):')
         self.extra_flags_edit = QLineEdit()
-        layout.addWidget(self.extra_flags_label)
-        layout.addWidget(self.extra_flags_edit)
+        extra_flags_tooltip_icon = QLabel()
+        extra_flags_tooltip_icon.setPixmap(QPixmap('ssailr_gui/assets/question_icon.png').scaled(20, 20))
+        extra_flags_tooltip_icon.setToolTip("Enter any extra flags for PANDASeq, enclosed in quotes (e.g., \"-L 50\").")
         
+        extra_flags_layout = QHBoxLayout()
+        extra_flags_layout.addWidget(self.extra_flags_label)
+        extra_flags_layout.addWidget(self.extra_flags_edit)
+        extra_flags_layout.addWidget(extra_flags_tooltip_icon)
+        layout.addLayout(extra_flags_layout)
+        
+        # Option -a
+        self.translate_check = QCheckBox('Translate to Amino Acids')
+        translate_tooltip_icon = QLabel()
+        translate_tooltip_icon.setPixmap(QPixmap('ssailr_gui/assets/question_icon.png').scaled(20, 20))
+        translate_tooltip_icon.setToolTip("Check this box to translate nucleotide sequences to amino acids.")
+        
+        translate_layout = QHBoxLayout()
+        translate_layout.addWidget(self.translate_check)
+        translate_layout.addWidget(translate_tooltip_icon)
+        layout.addLayout(translate_layout)
+
+        # Option -r
+        self.retain_check = QCheckBox('Retain Individual Lane Outputs')
+        retain_tooltip_icon = QLabel()
+        retain_tooltip_icon.setPixmap(QPixmap('ssailr_gui/assets/question_icon.png').scaled(20, 20))
+        retain_tooltip_icon.setToolTip("Check this box to retain outputs for individual lanes.")
+        
+        retain_layout = QHBoxLayout()
+        retain_layout.addWidget(self.retain_check)
+        retain_layout.addWidget(retain_tooltip_icon)
+        layout.addLayout(retain_layout)
+
         # Option for SSAILR
-        self.run_ssailr = QCheckBox("Run SSAILR (enrichment analysis)")
-        layout.addWidget(self.run_ssailr)
+        self.run_ssailr = QCheckBox("Run Eenrichment Analysis)")
+        ssailr_tooltip_icon = QLabel()
+        ssailr_tooltip_icon.setPixmap(QPixmap('ssailr_gui/assets/question_icon.png').scaled(20, 20))
+        ssailr_tooltip_icon.setToolTip("Check this box to run SSAILR for enrichment analysis.")
+        
+        ssailr_layout = QHBoxLayout()
+        ssailr_layout.addWidget(self.run_ssailr)
+        ssailr_layout.addWidget(ssailr_tooltip_icon)
+        layout.addLayout(ssailr_layout)
 
         # Progress bar
         self.progress_bar = QProgressBar()
@@ -81,18 +145,20 @@ class EasyDiver(QWidget):
 
         # Cancel
         self.cancel_button = QPushButton('Cancel')
+        self.cancel_button.setToolTip("Click to cancel and close the application.")
         self.cancel_button.clicked.connect(self.close)
         button_layout.addWidget(self.cancel_button)
 
         # Submit
         submit_button = QPushButton("Submit", self)
+        submit_button.setToolTip("Click to start the process with the specified parameters.")
         submit_button.clicked.connect(self.submit)
         button_layout.addWidget(submit_button)
 
         layout.addLayout(button_layout)
 
         self.setLayout(layout)
-    
+        
     def browse_input(self):
         directory = QFileDialog.getExistingDirectory(self, 'Select Directory')
         if directory:
