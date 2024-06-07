@@ -1,7 +1,7 @@
 import os
 import subprocess
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QCheckBox, QFileDialog, QPushButton, QMessageBox, QProgressBar, QTextEdit
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QCheckBox, QFileDialog, QPushButton, QMessageBox, QProgressBar, QTextEdit
+from PyQt5.QtGui import QPixmap
 
 from directory_edit import ClickableDirectoryEdit
 from ssailr import SSAILR
@@ -150,6 +150,11 @@ class EasyDiver(QWidget):
         # Progress bar
         self.progress_bar = QProgressBar()
         layout.addWidget(self.progress_bar)
+        
+        # Text box to display terminal output
+        self.output_text = QTextEdit()
+        self.output_text.setReadOnly(True)
+        layout.addWidget(self.output_text)
 
         # Horizontal layout
         button_layout = QHBoxLayout()
@@ -211,7 +216,18 @@ class EasyDiver(QWidget):
             run_script += f" -e \"{self.extra_flags_edit.text()}\""
 
         print(run_script)
-        self.progress_bar.setValue(0)
+        # Show a message box with a "Continue" button
+        message_box = QMessageBox()
+        message_box.setIcon(QMessageBox.Information)
+        message_box.setText("Let's process the data. Be patient, this might take a while...")
+        message_box.setWindowTitle("Processing Information")
+        continue_button = message_box.addButton("Continue", QMessageBox.AcceptRole)
+        message_box.exec_()
+
+        # Check if the "Continue" button was clicked
+        if message_box.clickedButton() == continue_button:
+            self.progress_bar.setValue(0)
+            self.output_text.clear()
 
         # Execute the script
         try:
@@ -220,16 +236,18 @@ class EasyDiver(QWidget):
             
             while True:
                 output = res.stdout.readline()
-                print(output)
-                if res.poll() is not None:
+                if output == "" and res.poll() is not None:
                     break
-
+                if output:
+                    self.output_text.append(output.strip())
+                    self.output_text.ensureCursorVisible()
+                    QApplication.processEvents()
                 self.progress_bar.setValue(progress)
                 progress += 1
 
             if res.returncode == 0:
                 self.progress_bar.setValue(100)
-                QMessageBox.information(self, "Success", "EasyDiver completed successfully. Now wait while we perform the next step.")
+                QMessageBox.information(self, "Success", "Pre-processing completed successfully. Now wait while we perform the next step.")
 
                 # Run SSAILR
                 if self.run_ssailr.isChecked():
@@ -252,7 +270,11 @@ class EasyDiver(QWidget):
                 self.close()
             else:
                 error_message = res.stderr.read()
+                self.output_text.append(f"Error: {error_message}")
+                self.output_text.ensureCursorVisible()
                 QMessageBox.critical(self, "Error", f"An error occurred: {error_message}")
                 
         except Exception as e:
+            self.output_text.append(f"Error: {str(e)}")
+            self.output_text.ensureCursorVisible()
             QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")
