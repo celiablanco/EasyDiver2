@@ -91,23 +91,21 @@ def generate_graphs():
                     print(f"Skipping line due to value error: {line}")
                     continue
 
-            # Remove outliers
-            x_filtered, y_filtered = remove_outliers(e_neg_values, e_out_values)
-
             # Perform linear regression
-            slope, intercept = np.polyfit(x_filtered, y_filtered, 1)
+            slope, intercept = np.polyfit(e_neg_values, e_out_values, 1)
             fit_line = np.poly1d([slope, intercept])
 
             # Create scatter plot
             plt.figure(figsize=(10, 6))
-            plt.scatter(x_filtered, y_filtered, s=10)
-            plt.plot(x_filtered, fit_line(x_filtered), color='blue', linestyle='dotted', linewidth=1)
-
-            # Plot the regression line
-            plt.plot(x_filtered, fit_line(x_filtered), color='blue', linestyle='dotted', linewidth=1, label=f'Regression Line (slope = {slope:.2f})')
+            plt.scatter(e_neg_values, e_out_values, s=10)
+            plt.plot(e_neg_values, fit_line(e_neg_values), color='blue', linestyle='dotted', linewidth=1, label=f'Regression Line (slope = {slope:.2f})')
 
             # Plot the diagonal line y = x
-            plt.plot(x_filtered, x_filtered, color='red', linestyle='-', linewidth=1, label='y = x')
+            plt.plot(e_neg_values, e_neg_values, color='red', linestyle='-', linewidth=1, label='y = x')
+
+            # Set logarithmic scales
+            plt.xscale('log')
+            plt.yscale('log')
 
             # Adding labels and title
             plt.xlabel('e_neg')
@@ -116,7 +114,7 @@ def generate_graphs():
 
             # Add legend
             plt.legend()
-            
+
             # Save the plot as an image
             output_file = os.path.join(f"{file_path}/figures", f"{os.path.splitext(res_file)[0]}.png")
             os.makedirs(os.path.dirname(output_file), exist_ok=True)
