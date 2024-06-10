@@ -1,6 +1,6 @@
 import os
 import subprocess
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QCheckBox, QFileDialog, QPushButton, QMessageBox, QProgressBar, QTextEdit
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QCheckBox, QFileDialog, QPushButton, QMessageBox, QTextEdit
 from PyQt5.QtGui import QPixmap
 
 from directory_edit import ClickableDirectoryEdit
@@ -147,10 +147,6 @@ class EasyDiver(QWidget):
         generate_plots_layout.addWidget(generate_plots_tooltip_icon)
         layout.addLayout(generate_plots_layout)
 
-        # Progress bar
-        self.progress_bar = QProgressBar()
-        layout.addWidget(self.progress_bar)
-        
         # Text box to display terminal output
         self.output_text = QTextEdit()
         self.output_text.setReadOnly(True)
@@ -226,12 +222,10 @@ class EasyDiver(QWidget):
 
         # Check if the "Continue" button was clicked
         if message_box.clickedButton() == continue_button:
-            self.progress_bar.setValue(0)
             self.output_text.clear()
 
         # Execute the script
         try:
-            progress = 0
             res = subprocess.Popen(run_script.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
             
             while True:
@@ -242,16 +236,13 @@ class EasyDiver(QWidget):
                     self.output_text.append(output.strip())
                     self.output_text.ensureCursorVisible()
                     QApplication.processEvents()
-                self.progress_bar.setValue(progress)
-                progress += 1
 
             if res.returncode == 0:
-                self.progress_bar.setValue(100)
                 QMessageBox.information(self, "Success", "Pre-processing completed successfully. Now wait while we perform the next step.")
 
                 # Run SSAILR
                 if self.run_ssailr.isChecked():
-                    self.ssailr.calculate(counts_type, output_dir, self.progress_bar)
+                    self.ssailr.calculate(counts_type, output_dir, self.output_text)
 
                 # Generate plots
                 if self.generate_plots.isChecked():
@@ -264,7 +255,7 @@ class EasyDiver(QWidget):
                     generate_histos = False
                     
                 if generate_scatter_plot or generate_histos:
-                    self.ssailr.generate_graphs(counts_type, output_dir, generate_scatter_plot, generate_histos)
+                    self.ssailr.generate_graphs(output_dir, generate_scatter_plot, generate_histos)
                 
                 # Close EasyDiver + SSAILR Window
                 self.close()

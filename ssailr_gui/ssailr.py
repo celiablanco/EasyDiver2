@@ -6,7 +6,7 @@ class SSAILR(QWidget):
     def __init__(self):
         super().__init__()
 
-    def calculate(self, counts_type, output_dir, progress_bar):
+    def calculate(self, counts_type, output_dir, output_text):
         run_script = "python3 modified_counts.py"
         
         if not os.path.exists(output_dir):
@@ -20,22 +20,18 @@ class SSAILR(QWidget):
         print(run_script)
         
         try:
-            progress = 0
-            progress_bar.setValue(progress)
             res = subprocess.Popen(run_script.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
             
             while True:
                 output = res.stdout.readline()
-                print(output)
+                if output:
+                    output_text.append(output.strip())
+                    print(output)
 
                 if res.poll() is not None:
                     break
-                if output:
-                    progress = min(progress + 1, 100)
-                    progress_bar.setValue(progress)
 
             if res.returncode == 0:
-                progress_bar.setValue(100)
                 QMessageBox.information(self, "Success", "SSAILR completed successfully. Now wait while we perform the next step.")
             else:
                 error_message = res.stderr.read()
@@ -44,7 +40,7 @@ class SSAILR(QWidget):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")
     
-    def generate_graphs(self, counts_type, output_dir, generate_scatter_plot, generate_histos):
+    def generate_graphs(self, output_dir, generate_scatter_plot, generate_histos, output_text):
         # Display input directory
         print(f"Current graph directory: {output_dir}.")
 
@@ -64,7 +60,9 @@ class SSAILR(QWidget):
 
                 while True:
                     output = res.stdout.readline()
-                    print(output)
+                    if output:
+                        output_text.append(output.strip())
+                        print(output)
                     if res.poll() is not None:
                         break
 
