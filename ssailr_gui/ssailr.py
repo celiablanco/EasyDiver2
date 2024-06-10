@@ -5,6 +5,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 class WorkerThread(QThread):
     output_signal = pyqtSignal(str)
+    finished_signal = pyqtSignal(int)
 
     def __init__(self, run_script):
         super().__init__()
@@ -24,6 +25,7 @@ class WorkerThread(QThread):
         if res.returncode != 0:
             error_message = res.stderr.read()
             self.output_signal.emit(f"Error: {error_message.strip()}")
+        self.finished_signal.emit(res.returncode)
 
 class SSAILR(QWidget):
     def __init__(self):
