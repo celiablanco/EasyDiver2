@@ -236,6 +236,7 @@ class EasyDiver(QWidget):
                     self.output_text.append(output.strip())
                     self.output_text.ensureCursorVisible()
                     QApplication.processEvents()
+                    print(output)
 
             if res.returncode == 0:
                 QMessageBox.information(self, "Success", "Pre-processing completed successfully. Now wait while we perform the next step.")
@@ -255,7 +256,7 @@ class EasyDiver(QWidget):
                     generate_histos = False
                     
                 if generate_scatter_plot or generate_histos:
-                    self.ssailr.generate_graphs(output_dir, generate_scatter_plot, generate_histos)
+                    self.ssailr.generate_graphs(output_dir, generate_scatter_plot, generate_histos, self.output_text)
                 
                 # Close EasyDiver + SSAILR Window
                 self.close()
