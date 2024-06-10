@@ -1,31 +1,24 @@
 import os
-import subprocess
 from PyQt5.QtWidgets import QWidget, QMessageBox, QTextEdit
 from PyQt5.QtCore import QThread, pyqtSignal
 
-class WorkerThread(QThread):
+
+class SSAILRWorkerThread(QThread):
     output_signal = pyqtSignal(str)
     finished_signal = pyqtSignal(int)
 
-    def __init__(self, run_script):
+    def __init__(self, method, *args):
         super().__init__()
-        self.run_script = run_script
+        self.method = method
+        self.args = args
 
     def run(self):
-        res = subprocess.Popen(self.run_script.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-        
-        while True:
-            output = res.stdout.readline()
-            if output:
-                self.output_signal.emit(output.strip())
-
-            if res.poll() is not None:
-                break
-
-        if res.returncode != 0:
-            error_message = res.stderr.read()
-            self.output_signal.emit(f"Error: {error_message.strip()}")
-        self.finished_signal.emit(res.returncode)
+        try:
+            self.method(*self.args)
+            self.finished_signal.emit(0)
+        except Exception as e:
+            self.output_signal.emit(f"Error: {str(e)}")
+            self.finished_signal.emit(1)
 
 class SSAILR(QWidget):
     def __init__(self):
@@ -89,7 +82,7 @@ class SSAILR(QWidget):
         if self.worker is not None:
             self.worker.wait()
 
-        self.worker = WorkerThread(run_script)
+        self.worker = SSAILRWorkerThread(run_script)
         self.worker.output_signal.connect(output_text.append)
         self.worker.output_signal.connect(print)
         self.worker.finished_signal.connect(finish_callback)
