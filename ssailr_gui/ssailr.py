@@ -1,4 +1,5 @@
 import os
+import subprocess
 from PyQt5.QtWidgets import QWidget, QMessageBox, QTextEdit
 from PyQt5.QtCore import QThread, pyqtSignal
 
@@ -7,23 +8,30 @@ class SSAILRWorkerThread(QThread):
     output_signal = pyqtSignal(str)
     finished_signal = pyqtSignal(int)
 
-    def __init__(self, method, *args):
+    def __init__(self, run_script):
         super().__init__()
-        self.method = method
-        self.args = args
+        self.run_script = run_script
 
     def run(self):
         try:
-            self.method(*self.args)
-            self.finished_signal.emit(0)
+            process = subprocess.Popen(self.run_script.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            while True:
+                output = process.stdout.readline()
+                if output == "" and process.poll() is not None:
+                    break
+                if output:
+                    self.output_signal.emit(output.strip())
+            self.finished_signal.emit(process.returncode)
         except Exception as e:
             self.output_signal.emit(f"Error: {str(e)}")
             self.finished_signal.emit(1)
+
 
 class SSAILR(QWidget):
     def __init__(self):
         super().__init__()
         self.worker = None
+        self.graph_tasks = []
 
     def calculate(self, counts_type, output_dir, output_text: QTextEdit):
         run_script = "python3 modified_counts.py"
