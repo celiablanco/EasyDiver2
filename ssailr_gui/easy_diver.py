@@ -1,11 +1,13 @@
 import os
 import subprocess
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QCheckBox, QFileDialog, QPushButton, QMessageBox, QTextEdit
+from PyQt5.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, 
+    QCheckBox, QFileDialog, QPushButton, QMessageBox, QTextEdit
+)
 from PyQt5.QtGui import QPixmap
 
 from directory_edit import ClickableDirectoryEdit
 from ssailr import SSAILR
-
 
 class EasyDiver(QWidget):
     def __init__(self):
@@ -242,10 +244,8 @@ class EasyDiver(QWidget):
             if res.returncode == 0:
                 QMessageBox.information(self, "Success", "Pre-processing completed successfully. Now wait while we perform the next step.")
 
-                generate_scatter_plot = self.generate_plots.isChecked()
-                generate_histos = self.generate_plots.isChecked()
-        
-                self.run_ssailr_steps(counts_type, output_dir, generate_scatter_plot, generate_histos)
+                # Run SSAILR and generate plots if checked
+                self.run_ssailr_steps(counts_type, output_dir)
 
                 # Close EasyDiver + SSAILR Window
                 self.close()
@@ -260,12 +260,17 @@ class EasyDiver(QWidget):
             self.output_text.ensureCursorVisible()
             QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")
 
-    def run_ssailr_steps(self, counts_type, output_dir, generate_scatter_plot, generate_histos):
-        self.ssailr.calculate(counts_type, output_dir, self.output_text)
-        self.ssailr.worker.finished_signal.connect(lambda returncode: self.on_calculate_finish(returncode, output_dir, generate_scatter_plot, generate_histos))
+    def run_ssailr_steps(self, counts_type, output_dir):
+        if self.run_ssailr.isChecked():
+            self.ssailr.worker.finished_signal.connect(lambda returncode: self.on_calculate_finish(returncode, output_dir))
+            self.ssailr.calculate(counts_type, output_dir, self.output_text)
+        else:
+            self.on_calculate_finish(0, output_dir)  # Proceed directly to generating graphs if SSAILR is not run
 
-    def on_calculate_finish(self, returncode, output_dir, generate_scatter_plot, generate_histos):
+    def on_calculate_finish(self, returncode, output_dir):
         if returncode == 0:
+            generate_histos = self.generate_plots.isChecked()
+            generate_scatter_plot = self.run_ssailr.isChecked() and generate_histos
             self.ssailr.generate_graphs(output_dir, generate_scatter_plot, generate_histos, self.output_text)
         else:
             QMessageBox.critical(self, "Error", "SSAILR calculation failed. Please check the logs for more details.")
