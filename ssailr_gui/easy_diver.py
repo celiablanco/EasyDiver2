@@ -186,7 +186,7 @@ class EasyDiver(QWidget):
             return
         else:
             run_script += f"-i {self.input_dir_edit.text()}"
-        
+
         if self.output_dir_edit.text():
             run_script += f" -o {self.output_dir_edit.text()}"
             output_dir = f"{self.input_dir_edit.text()}/{self.output_dir_edit.text()}"
@@ -214,7 +214,6 @@ class EasyDiver(QWidget):
         if self.extra_flags_edit.text():
             run_script += f" -e \"{self.extra_flags_edit.text()}\""
 
-        print(run_script)
         # Show a message box with a "Continue" button
         message_box = QMessageBox()
         message_box.setIcon(QMessageBox.Information)
@@ -230,7 +229,7 @@ class EasyDiver(QWidget):
         # Execute the script
         try:
             res = subprocess.Popen(run_script.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-            
+
             while True:
                 output = res.stdout.readline()
                 if output == "" and res.poll() is not None:
@@ -243,18 +242,13 @@ class EasyDiver(QWidget):
 
             if res.returncode == 0:
                 QMessageBox.information(self, "Success", "Pre-processing completed successfully. Now wait while we perform the next step.")
-
-                # Run SSAILR and generate plots if checked
                 self.run_ssailr_steps(counts_type, output_dir)
-
-                # Close EasyDiver + SSAILR Window
-                self.close()
             else:
                 error_message = res.stderr.read()
                 self.output_text.append(f"Error: {error_message}")
                 self.output_text.ensureCursorVisible()
                 QMessageBox.critical(self, "Error", f"An error occurred: {error_message}")
-                
+
         except Exception as e:
             self.output_text.append(f"Error: {str(e)}")
             self.output_text.ensureCursorVisible()
@@ -262,12 +256,7 @@ class EasyDiver(QWidget):
 
     def run_ssailr_steps(self, counts_type, output_dir):
         if self.run_ssailr.isChecked():
-            self.ssailr.calculate(
-                counts_type=counts_type,
-                output_dir=output_dir,
-                output_text=self.output_text,
-                finished_callback=lambda returncode: self.on_calculate_finish(returncode, output_dir)
-            )
+            self.ssailr.calculate(counts_type, output_dir, self.output_text, lambda returncode: self.on_calculate_finish(returncode, output_dir))
         else:
             self.on_calculate_finish(0, output_dir)
 
@@ -275,6 +264,13 @@ class EasyDiver(QWidget):
         if returncode == 0:
             generate_histos = self.generate_plots.isChecked()
             generate_scatter_plot = self.run_ssailr.isChecked() and generate_histos
-            self.ssailr.generate_graphs(output_dir, generate_scatter_plot, generate_histos, self.output_text)
+            self.ssailr.generate_graphs(output_dir, generate_scatter_plot, generate_histos, self.output_text, self.on_graphs_finish)
         else:
             QMessageBox.critical(self, "Error", "SSAILR calculation failed. Please check the logs for more details.")
+
+    def on_graphs_finish(self, returncode):
+        if returncode == 0:
+            QMessageBox.information(self, "Success", "All tasks completed successfully.")
+            self.close()
+        else:
+            QMessageBox.critical(self, "Error", "An error occurred during graph generation. Please check the logs for more details.")
