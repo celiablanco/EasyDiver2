@@ -33,7 +33,7 @@ class SSAILR(QWidget):
         self.worker = None
         self.graph_tasks = []
 
-    def calculate(self, counts_type, output_dir, output_text: QTextEdit):
+    def calculate(self, counts_type, output_dir, output_text: QTextEdit, finished_callback):
         run_script = "python3 modified_counts.py"
         
         if not os.path.exists(output_dir):
@@ -46,13 +46,7 @@ class SSAILR(QWidget):
         run_script += f" -count {counts_type}"
         print(run_script)
         
-        self.start_worker(run_script, output_text, self.on_calculate_finish)
-
-    def on_calculate_finish(self, returncode):
-        if returncode == 0:
-            QMessageBox.information(self, "Success", "SSAILR completed successfully. Now wait while we perform the next step.")
-        else:
-            QMessageBox.critical(self, "Error", f"An error occurred. Please check the logs for more details.")
+        self.start_worker(run_script, output_text, finished_callback)
 
     def generate_graphs(self, output_dir, generate_scatter_plot, generate_histos, output_text: QTextEdit):
         print(f"Current graph directory: {output_dir}.")

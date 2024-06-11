@@ -262,10 +262,14 @@ class EasyDiver(QWidget):
 
     def run_ssailr_steps(self, counts_type, output_dir):
         if self.run_ssailr.isChecked():
-            self.ssailr.worker.finished_signal.connect(lambda returncode: self.on_calculate_finish(returncode, output_dir))
-            self.ssailr.calculate(counts_type, output_dir, self.output_text)
+            self.ssailr.calculate(
+                counts_type=counts_type,
+                output_dir=output_dir,
+                output_text=self.output_text,
+                finished_callback=lambda returncode: self.on_calculate_finish(returncode, output_dir)
+            )
         else:
-            self.on_calculate_finish(0, output_dir)  # Proceed directly to generating graphs if SSAILR is not run
+            self.on_calculate_finish(0, output_dir)
 
     def on_calculate_finish(self, returncode, output_dir):
         if returncode == 0:
