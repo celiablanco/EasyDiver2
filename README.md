@@ -27,7 +27,7 @@ EasyDIVER and the translation tool must be made executable. This can be done by 
 
 The pipeline will not be found unless it is stored in the working directory or in a directory that is in the user's PATH environment (e.g. `bin/`). Also, the pipeline will not be able to find the translator if it is not stored in a directory that is in the user's PATH environment (e.g. `bin/`). 
 
-# INPUT
+# INPUT --- ADD NEGATIVE FILES 🔴 🔴 🔴
 
 All input files must be:
     
