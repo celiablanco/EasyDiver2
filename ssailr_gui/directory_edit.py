@@ -2,6 +2,7 @@ import os
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QLineEdit
 
+
 class ClickableDirectoryEdit(QLineEdit):
     clicked = pyqtSignal()
 

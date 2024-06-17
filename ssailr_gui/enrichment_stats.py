@@ -1,12 +1,24 @@
 import subprocess
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QMessageBox, QFileDialog, QPushButton, QRadioButton, QGroupBox, QProgressBar
+from PyQt5.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QMessageBox,
+    QFileDialog,
+    QPushButton,
+    QRadioButton,
+    QGroupBox,
+    QProgressBar,
+)
 from directory_edit import ClickableDirectoryEdit
+
 
 class EnrichmentStats(QWidget):
     def __init__(self):
         super().__init__()
         self.init_ui()
-    
+
     def init_ui(self):
         self.setWindowTitle("Enrichment Statistics")
         layout = QVBoxLayout()
@@ -16,7 +28,9 @@ class EnrichmentStats(QWidget):
         layout.addWidget(required_label)
 
         # -dir
-        self.easy_diver_dir_label = QLabel('Enter the filepath for the EasyDIVER output directory:')
+        self.easy_diver_dir_label = QLabel(
+            "Enter the filepath for the EasyDIVER output directory:"
+        )
         self.easy_diver_dir_edit = ClickableDirectoryEdit()
         self.easy_diver_dir_edit.clicked.connect(self.browse_input)
         layout.addWidget(self.easy_diver_dir_label)
@@ -45,7 +59,7 @@ class EnrichmentStats(QWidget):
         button_layout = QHBoxLayout()
 
         # Cancel
-        self.cancel_button = QPushButton('Cancel')
+        self.cancel_button = QPushButton("Cancel")
         self.cancel_button.clicked.connect(self.close)
         button_layout.addWidget(self.cancel_button)
 
@@ -56,12 +70,12 @@ class EnrichmentStats(QWidget):
 
         layout.addLayout(button_layout)
         self.setLayout(layout)
-    
+
     def browse_input(self):
-        directory = QFileDialog.getExistingDirectory(self, 'Select Directory')
+        directory = QFileDialog.getExistingDirectory(self, "Select Directory")
         if directory:
             self.easy_diver_dir_edit.setText(directory)
-        
+
     def calculate(self):
         run_script = "python3 modified_counts.py "
         if not self.easy_diver_dir_edit.text():
@@ -69,20 +83,25 @@ class EnrichmentStats(QWidget):
             return
         else:
             run_script += f"-dir {self.easy_diver_dir_edit.text()}"
-        
+
         if self.radio_aa.isChecked():
             run_script += f" -count counts.aa"
         else:
             run_script += f" -count counts"
-        
+
         print(run_script)
         self.progress_bar.setValue(0)
 
         # Execute the script
         try:
             progress = 0
-            res = subprocess.Popen(run_script.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-            
+            res = subprocess.Popen(
+                run_script.split(" "),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                universal_newlines=True,
+            )
+
             while True:
                 output = res.stdout.readline()
                 print(output)
@@ -100,7 +119,9 @@ class EnrichmentStats(QWidget):
                 self.close()
             else:
                 error_message = res.stderr.read()
-                QMessageBox.critical(self, "Error", f"An error occurred: {error_message}")
+                QMessageBox.critical(
+                    self, "Error", f"An error occurred: {error_message}"
+                )
 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {str(e)}")

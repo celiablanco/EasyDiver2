@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QMe
 
 from easy_diver import EasyDiver
 
+
 class MainMenu(QWidget):
     def __init__(self):
         super().__init__()
@@ -22,7 +23,7 @@ class MainMenu(QWidget):
                 button.clicked.connect(self.run_all)
 
             if option == "Help":
-                button.clicked.connect(self.display_help_message) 
+                button.clicked.connect(self.display_help_message)
 
             if option == "Quit":
                 button.clicked.connect(self.exit_application)
@@ -67,7 +68,8 @@ class MainMenu(QWidget):
     def exit_application(self):
         QApplication.quit()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainMenu()
     sys.exit(app.exec_())

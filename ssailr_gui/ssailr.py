@@ -14,7 +14,12 @@ class SSAILRWorkerThread(QThread):
 
     def run(self):
         try:
-            process = subprocess.Popen(self.run_script.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            process = subprocess.Popen(
+                self.run_script.split(),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                universal_newlines=True,
+            )
             while True:
                 output = process.stdout.readline()
                 if output == "" and process.poll() is not None:
@@ -26,13 +31,16 @@ class SSAILRWorkerThread(QThread):
             self.output_signal.emit(f"Error: {str(e)}")
             self.finished_signal.emit(1)
 
+
 class SSAILR(QWidget):
     def __init__(self):
         super().__init__()
         self.worker = None
         self.graph_tasks = []
 
-    def calculate(self, counts_type, output_dir, output_text: QTextEdit, finished_callback):
+    def calculate(
+        self, counts_type, output_dir, output_text: QTextEdit, finished_callback
+    ):
         run_script = "python3 modified_counts.py"
 
         if not os.path.exists(output_dir):
@@ -47,7 +55,14 @@ class SSAILR(QWidget):
 
         self.start_worker(run_script, output_text, finished_callback)
 
-    def generate_graphs(self, output_dir, generate_scatter_plot, generate_histos, output_text: QTextEdit, finished_callback):
+    def generate_graphs(
+        self,
+        output_dir,
+        generate_scatter_plot,
+        generate_histos,
+        output_text: QTextEdit,
+        finished_callback,
+    ):
         print(f"Current graph directory: {output_dir}.")
 
         self.graph_tasks = []
@@ -67,7 +82,13 @@ class SSAILR(QWidget):
     def process_next_graph(self, output_text, finished_callback):
         if self.graph_tasks:
             run_script, graph_type = self.graph_tasks.pop(0)
-            self.start_worker(run_script, output_text, lambda returncode: self.on_graph_finish(returncode, graph_type, output_text, finished_callback))
+            self.start_worker(
+                run_script,
+                output_text,
+                lambda returncode: self.on_graph_finish(
+                    returncode, graph_type, output_text, finished_callback
+                ),
+            )
         else:
             finished_callback(0)
 
@@ -76,7 +97,11 @@ class SSAILR(QWidget):
             if not self.graph_tasks and graph_type == 3:
                 finished_callback(0)
         else:
-            QMessageBox.critical(self, "Error", "An error occurred during graph generation. Please check the logs for more details.")
+            QMessageBox.critical(
+                self,
+                "Error",
+                "An error occurred during graph generation. Please check the logs for more details.",
+            )
             finished_callback(1)
         self.process_next_graph(output_text, finished_callback)
 
