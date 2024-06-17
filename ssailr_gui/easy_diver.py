@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 from PyQt5.QtWidgets import (
     QApplication,
@@ -28,6 +29,7 @@ class EasyDiver(QWidget):
     def init_ui(self):
         self.setWindowTitle("Easy Diver")
         layout = QVBoxLayout()
+        image_path = os.path.join(sys._MEIPASS, "ssailr_gui/assets/question_icon.png")
 
         # Required parameters
         required_label = QLabel("REQUIRED")
@@ -39,7 +41,7 @@ class EasyDiver(QWidget):
         self.input_dir_edit.clicked.connect(self.browse_input)
         input_tooltip_icon = QLabel()
         input_tooltip_icon.setPixmap(
-            QPixmap("ssailr_gui/assets/question_icon.png").scaled(20, 20)
+            QPixmap(image_path).scaled(20, 20)
         )
         input_tooltip_icon.setToolTip(
             "Select the directory containing the input files."
@@ -60,7 +62,7 @@ class EasyDiver(QWidget):
         self.output_dir_edit = QLineEdit()
         output_tooltip_icon = QLabel()
         output_tooltip_icon.setPixmap(
-            QPixmap("ssailr_gui/assets/question_icon.png").scaled(20, 20)
+            QPixmap(image_path).scaled(20, 20)
         )
         output_tooltip_icon.setToolTip(
             "Specify the directory to save output files. If not provided, it defaults to the input directory with '/pipeline.output' appended."
@@ -77,7 +79,7 @@ class EasyDiver(QWidget):
         self.forward_primer_edit = QLineEdit()
         forward_primer_tooltip_icon = QLabel()
         forward_primer_tooltip_icon.setPixmap(
-            QPixmap("ssailr_gui/assets/question_icon.png").scaled(20, 20)
+            QPixmap(image_path).scaled(20, 20)
         )
         forward_primer_tooltip_icon.setToolTip(
             "Enter the forward primer sequence for extraction."
@@ -94,7 +96,7 @@ class EasyDiver(QWidget):
         self.reverse_primer_edit = QLineEdit()
         reverse_primer_tooltip_icon = QLabel()
         reverse_primer_tooltip_icon.setPixmap(
-            QPixmap("ssailr_gui/assets/question_icon.png").scaled(20, 20)
+            QPixmap(image_path).scaled(20, 20)
         )
         reverse_primer_tooltip_icon.setToolTip(
             "Enter the reverse primer sequence for extraction."
@@ -111,7 +113,7 @@ class EasyDiver(QWidget):
         self.threads_edit = QLineEdit()
         threads_tooltip_icon = QLabel()
         threads_tooltip_icon.setPixmap(
-            QPixmap("ssailr_gui/assets/question_icon.png").scaled(20, 20)
+            QPixmap(image_path).scaled(20, 20)
         )
         threads_tooltip_icon.setToolTip(
             "Specify the number of threads to use for processing."
@@ -130,7 +132,7 @@ class EasyDiver(QWidget):
         self.extra_flags_edit = QLineEdit()
         extra_flags_tooltip_icon = QLabel()
         extra_flags_tooltip_icon.setPixmap(
-            QPixmap("ssailr_gui/assets/question_icon.png").scaled(20, 20)
+            QPixmap(image_path).scaled(20, 20)
         )
         extra_flags_tooltip_icon.setToolTip(
             'Enter any extra flags for PANDASeq, enclosed in quotes (e.g., "-L 50").'
@@ -146,7 +148,7 @@ class EasyDiver(QWidget):
         self.translate_check = QCheckBox("Translate to Amino Acids")
         translate_tooltip_icon = QLabel()
         translate_tooltip_icon.setPixmap(
-            QPixmap("ssailr_gui/assets/question_icon.png").scaled(20, 20)
+            QPixmap(image_path).scaled(20, 20)
         )
         translate_tooltip_icon.setToolTip(
             "Check this box to translate nucleotide sequences to amino acids."
@@ -161,7 +163,7 @@ class EasyDiver(QWidget):
         self.retain_check = QCheckBox("Retain Individual Lane Outputs")
         retain_tooltip_icon = QLabel()
         retain_tooltip_icon.setPixmap(
-            QPixmap("ssailr_gui/assets/question_icon.png").scaled(20, 20)
+            QPixmap(image_path).scaled(20, 20)
         )
         retain_tooltip_icon.setToolTip(
             "Check this box to retain outputs for individual lanes."
@@ -176,7 +178,7 @@ class EasyDiver(QWidget):
         self.run_ssailr = QCheckBox("Run Enrichment Analysis")
         ssailr_tooltip_icon = QLabel()
         ssailr_tooltip_icon.setPixmap(
-            QPixmap("ssailr_gui/assets/question_icon.png").scaled(20, 20)
+            QPixmap(image_path).scaled(20, 20)
         )
         ssailr_tooltip_icon.setToolTip(
             "Check this box to run SSAILR for enrichment analysis."
@@ -191,7 +193,7 @@ class EasyDiver(QWidget):
         self.generate_plots = QCheckBox("Generate Plots")
         generate_plots_tooltip_icon = QLabel()
         generate_plots_tooltip_icon.setPixmap(
-            QPixmap("ssailr_gui/assets/question_icon.png").scaled(20, 20)
+            QPixmap(image_path).scaled(20, 20)
         )
         generate_plots_tooltip_icon.setToolTip("Check to generate plots from the data.")
 
@@ -232,18 +234,23 @@ class EasyDiver(QWidget):
             self.input_dir_edit.setText(directory)
 
     def submit(self):
-        run_script = "bash easydiver.sh "
+        # Construct the path to easydiver.sh using sys._MEIPASS
+        run_script = os.path.join(sys._MEIPASS, "easydiver.sh")
+
+        # Check for required input directory
         if not self.input_dir_edit.text():
             QMessageBox.critical(self, "Error", "Please enter the required input.")
             return
-        else:
-            run_script += f"-i {self.input_dir_edit.text()}"
 
+        # Build the command string for easydiver.sh
+        run_script += f" -i {self.input_dir_edit.text()}"
+
+        # Optional parameters
         if self.output_dir_edit.text():
             run_script += f" -o {self.output_dir_edit.text()}"
-            output_dir = f"{self.input_dir_edit.text()}/{self.output_dir_edit.text()}"
+            output_dir = os.path.join(self.input_dir_edit.text(), self.output_dir_edit.text())
         else:
-            output_dir = f"{self.input_dir_edit.text()}/pipeline.output"
+            output_dir = os.path.join(self.input_dir_edit.text(), "pipeline.output")
 
         if self.forward_primer_edit.text():
             run_script += f" -p {self.forward_primer_edit.text()}"

@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 from PyQt5.QtWidgets import QWidget, QMessageBox, QTextEdit
 from PyQt5.QtCore import QThread, pyqtSignal
@@ -41,7 +42,7 @@ class SSAILR(QWidget):
     def calculate(
         self, counts_type, output_dir, output_text: QTextEdit, finished_callback
     ):
-        run_script = "python3 modified_counts.py"
+        run_script = os.path.join(sys._MEIPASS, "python3 modified_counts.py")
 
         if not os.path.exists(output_dir):
             QMessageBox.critical(self, "Error", "Output directory doesn't exist.")
@@ -72,7 +73,7 @@ class SSAILR(QWidget):
             if not generate_histos and (i == 2 or i == 3):
                 continue
 
-            run_script = f"python3 graphs.py {output_dir} {i}"
+            run_script = os.path.join(sys._MEIPASS, f"python3 graphs.py {output_dir} {i}")
             print(run_script)
 
             self.graph_tasks.append((run_script, i))

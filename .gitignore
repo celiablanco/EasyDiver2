@@ -1,8 +1,10 @@
 ssailr_gui/__pychache__/*
+build/*
+dist/*
 env/
 data_large/
 data_small/
-data/
+data/*
 modified_counts/
 scripts_enrichments/res.txt
 scripts_enrichments/1-res.txt
