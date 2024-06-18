@@ -154,6 +154,7 @@ class EasyDiver(QWidget):
 
         translate_layout = QHBoxLayout()
         translate_layout.addWidget(self.translate_check)
+        translate_layout.addStretch()
         translate_layout.addWidget(translate_tooltip_icon)
         layout.addLayout(translate_layout)
 
@@ -169,6 +170,7 @@ class EasyDiver(QWidget):
 
         retain_layout = QHBoxLayout()
         retain_layout.addWidget(self.retain_check)
+        retain_layout.addStretch()
         retain_layout.addWidget(retain_tooltip_icon)
         layout.addLayout(retain_layout)
 
@@ -184,6 +186,7 @@ class EasyDiver(QWidget):
 
         ssailr_layout = QHBoxLayout()
         ssailr_layout.addWidget(self.run_ssailr)
+        ssailr_layout.addStretch()
         ssailr_layout.addWidget(ssailr_tooltip_icon)
         layout.addLayout(ssailr_layout)
 
@@ -197,6 +200,7 @@ class EasyDiver(QWidget):
 
         generate_plots_layout = QHBoxLayout()
         generate_plots_layout.addWidget(self.generate_plots)
+        generate_plots_layout.addStretch()
         generate_plots_layout.addWidget(generate_plots_tooltip_icon)
         layout.addLayout(generate_plots_layout)
 
