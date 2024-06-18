@@ -42,16 +42,17 @@ class SSAILR(QWidget):
     def calculate(
         self, counts_type, output_dir, output_text: QTextEdit, finished_callback
     ):
-        run_script = os.path.join(sys._MEIPASS, "python3 modified_counts.py")
+        script_path = os.path.join(sys._MEIPASS, "modified_counts.py")
 
+        # Check if the output directory exists
         if not os.path.exists(output_dir):
             QMessageBox.critical(self, "Error", "Output directory doesn't exist.")
             return
         else:
             print(f"{output_dir} exists.")
-            run_script += f" -dir {output_dir}"
 
-        run_script += f" -count {counts_type}"
+        # Construct the command with necessary arguments
+        run_script = f"python3 {script_path} -dir {output_dir} -count {counts_type}"
         print(run_script)
 
         self.start_worker(run_script, output_text, finished_callback)
@@ -73,7 +74,8 @@ class SSAILR(QWidget):
             if not generate_histos and (i == 2 or i == 3):
                 continue
 
-            run_script = os.path.join(sys._MEIPASS, f"python3 graphs.py {output_dir} {i}")
+            script_path = os.path.join(sys._MEIPASS, "graphs.py")
+            run_script = f"python3 {script_path} {output_dir} {i}"
             print(run_script)
 
             self.graph_tasks.append((run_script, i))
