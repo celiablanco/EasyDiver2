@@ -14,6 +14,7 @@ a = Analysis(
         ('translator.py', '.'),
         ('txt_to_csv.py', '.'),
         ('txt_to_xslx.py', '.'),
+	('bootstrap.py', '.'),
         ('ssailr_gui/assets/question_icon.png', 'ssailr_gui/assets'),
         ('ssailr_gui/directory_edit.py', 'ssailr_gui'),
         ('ssailr_gui/easy_diver.py', 'ssailr_gui'),

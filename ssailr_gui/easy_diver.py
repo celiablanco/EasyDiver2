@@ -338,6 +338,7 @@ class EasyDiver(QWidget):
             self.on_calculate_finish(0, output_dir)
 
     def on_calculate_finish(self, returncode, output_dir):
+        print(returncode, output_dir)
         if returncode == 0:
             generate_histos = self.generate_plots.isChecked()
             generate_scatter_plot = self.run_ssailr.isChecked() and generate_histos
