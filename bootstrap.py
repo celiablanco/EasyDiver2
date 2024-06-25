@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def bootstrap(count, total, depth=1000, smoothing=1, seed=42):
+def bootstrap(count, total, depth=1002, smoothing=1, seed=42):
     if seed is not None:
         np.random.seed(seed)  # Set random seed to ensure consistent error margins
     if total != 1:  # Not a decimal
