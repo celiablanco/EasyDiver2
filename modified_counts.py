@@ -397,7 +397,7 @@ def find_enrichments():
                             counts_dir,
                             str(i + 1) + "-neg*" + "_" + counts_type + ".txt",
                         )
-                    ),
+                    )[0],
                 )
 
             # Calculate progress
