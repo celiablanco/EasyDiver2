@@ -253,14 +253,14 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                 sequence_number += 1
                 row.append(f"seq_{unique_sequences[seq]}")
                 row.append(seq)
-                row.append(str(c_in))
-                row.append(format_bootstrap(c_in_range, "a"))
-                row.append(str(f"{f_in:.6f}"))
-                row.append(format_bootstrap(f_in_range, "f"))
-                row.append(str(c_post))
-                row.append(format_bootstrap(c_post_range, "a"))
-                row.append(str(f"{f_post:.6f}"))
-                row.append(format_bootstrap(f_post_range, "f"))
+                row.append(str(c_in)) # a_in
+                row.append(format_bootstrap(c_in_range, "a")) # a_in 95
+                row.append(str(f"{f_in:.6f}")) # f_in
+                row.append(format_bootstrap(f_in_range, "f")) # f_in 95
+                row.append(str(c_post)) # a_out
+                row.append(format_bootstrap(c_post_range, "a")) # a_out 95
+                row.append(str(f"{f_post:.6f}")) # f_out
+                row.append(format_bootstrap(f_post_range, "f")) # f_out 95
 
                 if neg_file is not None:
                     c_neg_boot = bootstrap(c_neg, totals[1])
@@ -270,10 +270,13 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                         else [max(c_neg - c_neg_boot[1], 1), c_neg + c_neg_boot[1]]
                     )
                     f_neg_range = [(x / float(totals[1])) for x in c_neg_range]
-                    row.append(str(c_neg_boot))
-                    row.append(str(format_bootstrap(c_neg_range, "a")))
-                    row.append(str(f"{f_neg:.6f}"))
-                    row.append(format_bootstrap(f_neg_range, "f"))
+                    row.append(str(c_neg_boot)) # a_neg
+                    row.append(str(format_bootstrap(c_neg_range, "a"))) # a_neg 95
+                    row.append(str(f"{f_neg:.6f}")) # f_neg
+                    row.append(format_bootstrap(f_neg_range, "f")) # f_neg 95
+                else:
+                    row.extend(['-', '-', '-', '-'])
+                    
 
                 # Calculate and adjust enrichment in positive and negative pools
                 if (
