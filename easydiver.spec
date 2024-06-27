@@ -7,6 +7,7 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
+	('pandaseq-master', 'pandaseq-master'),
         ('graphs.py', '.'),
         ('gui.bash', '.'),
         ('easydiver.sh', '.'),
@@ -16,6 +17,7 @@ a = Analysis(
         ('txt_to_xslx.py', '.'),
 	('bootstrap.py', '.'),
         ('ssailr_gui/assets/question_icon.png', 'ssailr_gui/assets'),
+        ('ssailr_gui/assets/easy_diver.ico', 'ssailr_gui/assets'),
         ('ssailr_gui/directory_edit.py', 'ssailr_gui'),
         ('ssailr_gui/easy_diver.py', 'ssailr_gui'),
         ('ssailr_gui/enrichment_stats.py', 'ssailr_gui'),
