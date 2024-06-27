@@ -214,7 +214,7 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                 c_neg = 0
 
             # Bootstrap data !!! Changed this part to make freq ranges make more sense according to abundances
-            c_post_boot = bootstrap(c_post, totals[2])
+            c_post_boot = bootstrap(c_post, totals[1])
             c_in_boot = bootstrap(c_in, totals[0])
             c_neg_boot = None
 
@@ -223,7 +223,7 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                 if c_post == 0
                 else [max(c_post - c_post_boot[1], 1), c_post + c_post_boot[1]]
             )
-            f_post_range = [(x / float(totals[2])) for x in c_post_range]
+            f_post_range = [(x / float(totals[1])) for x in c_post_range]
             c_in_range = (
                 [0, 0]
                 if c_in == 0
@@ -265,7 +265,7 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                         if c_neg == 0
                         else [max(c_neg - c_neg_boot[1], 1), c_neg + c_neg_boot[1]]
                     )
-                    f_neg_range = [(x / float(totals[2])) for x in c_neg_range]
+                    f_neg_range = [(x / float(totals[1])) for x in c_neg_range]
                     row.append(str(c_neg))
                     row.append(str(format_bootstrap(c_neg_range, "a")))
                     row.append(str(f"{f_neg:.6f}"))
@@ -281,8 +281,13 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                     enr_post_max = (
                         f_post_range[1] / f_in_range[0]
                     )  # Max enrichment due to selection - assumes largest f_out and smallest f_in
-                    enr_neg_min = f_neg_range[0] / f_in_range[1]
-                    enr_neg_max = f_neg_range[1] / f_in_range[0]
+                    if neg_file is not None:
+                        enr_neg_min = f_neg_range[0] / f_in_range[1]
+                        enr_neg_max = f_neg_range[1] / f_in_range[0]
+                    else:
+                        enr_neg_min = 0
+                        enr_neg_max = 0
+
                 else:  # Not enough data to make an estimate
                     enr_post_min = 0
                     enr_post_max = 0
@@ -392,7 +397,7 @@ def find_enrichments():
                             counts_dir,
                             str(i + 1) + "-neg*" + "_" + counts_type + ".txt",
                         )
-                    ),
+                    )[0],
                 )
 
             # Calculate progress
