@@ -152,14 +152,17 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
         writer = csv.writer(csv_file)
 
         # Write general information
-        writer.writerow(["Number of Unique Sequences", uniques[-1]])
-        writer.writerow(["Total Number of Molecules", totals[-1]])
+        writer.writerow(["Number of Unique Sequences (Output)", uniques[-1]])
+        writer.writerow(["Total Number of Molecules (Output)", totals[-1]])
         if in_file is not None:
             writer.writerow(["Number of Unique Sequences (Input)", uniques[0]])
             writer.writerow(["Total Number of Molecules (Input)", totals[0]])
         if neg_file is not None:
             writer.writerow(["Number of Unique Sequences (Neg Control)", uniques[1]])
             writer.writerow(["Total Number of Molecules (Neg Control)", totals[1]])
+        else:
+            writer.writerow(["Number of Unique Sequences (Neg Control)", '-'])
+            writer.writerow(["Total Number of Molecules (Neg Control)", '-']) 
 
         # Write column headers
         writer.writerow(
@@ -267,7 +270,7 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                         else [max(c_neg - c_neg_boot[1], 1), c_neg + c_neg_boot[1]]
                     )
                     f_neg_range = [(x / float(totals[1])) for x in c_neg_range]
-                    row.append(str(c_neg))
+                    row.append(str(c_neg_boot))
                     row.append(str(format_bootstrap(c_neg_range, "a")))
                     row.append(str(f"{f_neg:.6f}"))
                     row.append(format_bootstrap(f_neg_range, "f"))
