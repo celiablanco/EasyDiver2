@@ -305,7 +305,7 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                     row.append(str(f"{enr_post:.6f}"))
                     row.append(str(f"[{enr_post_min:.6f}, {enr_post_max:.6f}]"))
                 else:
-                    row.append("-")
+                    row.extend(['-', '-'])
 
                 if neg_file is not None:  # 2A, 2B case check
                     if enr_neg_max > 0:
@@ -313,7 +313,9 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                         row.append(str(f"{enr_neg:.6f}"))
                         row.append(str(f"[{enr_neg_min:.6f}, {enr_neg_max:.6f}]"))
                     else:
-                        row.append("-")
+                        row.extend(['-', '-'])
+                else:
+                    row.extend(['-', '-'])
 
                 if enr_neg_max > 0 and enr_neg_min > 0:
                     enr_ratio_min = enr_post_min / enr_neg_max
@@ -321,7 +323,7 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                     row.append(str(f"{enr_post / enr_neg:.6f}"))
                     row.append(str(f"[{enr_ratio_min:.6f}, {enr_ratio_max:.6f}]"))
                 elif neg_file is None:
-                    row.append(" ")
+                    row.extend(['-', '-'])
                 else:
                     row.append("-")
 

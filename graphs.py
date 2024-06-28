@@ -79,7 +79,7 @@ def generate_graphs():
             start_index = 7
             for line in lines[start_index:]:
                 columns = line.split(",")
-                if "-" in (columns[-3], columns[-4], columns[-5], columns[-6]):
+                if "-" in (columns[-4], columns[-6]):
                     continue
                 try:
                     # Calculate e_out and e_neg values
@@ -94,50 +94,51 @@ def generate_graphs():
                     continue
 
             # Perform linear regression
-            slope, intercept = np.polyfit(e_neg_values, e_out_values, 1)
-            fit_line = np.poly1d([slope, intercept])
+            if e_neg_values:
+                slope, intercept = np.polyfit(e_neg_values, e_out_values, 1)
+                fit_line = np.poly1d([slope, intercept])
 
-            # Create scatter plot
-            plt.figure(figsize=(10, 6))
-            plt.scatter(e_neg_values, e_out_values, s=10)
-            plt.plot(
-                e_neg_values,
-                fit_line(e_neg_values),
-                color="blue",
-                linestyle="dotted",
-                linewidth=1,
-                label=f"Regression Line (slope = {slope:.2f})",
-            )
+                # Create scatter plot
+                plt.figure(figsize=(10, 6))
+                plt.scatter(e_neg_values, e_out_values, s=10)
+                plt.plot(
+                    e_neg_values,
+                    fit_line(e_neg_values),
+                    color="blue",
+                    linestyle="dotted",
+                    linewidth=1,
+                    label=f"Regression Line (slope = {slope:.2f})",
+                )
 
-            # Plot the diagonal line y = x
-            plt.plot(
-                e_neg_values,
-                e_neg_values,
-                color="red",
-                linestyle="-",
-                linewidth=1,
-                label="y = x",
-            )
+                # Plot the diagonal line y = x
+                plt.plot(
+                    e_neg_values,
+                    e_neg_values,
+                    color="red",
+                    linestyle="-",
+                    linewidth=1,
+                    label="y = x",
+                )
 
-            # Set logarithmic scales
-            plt.xscale("log")
-            plt.yscale("log")
+                # Set logarithmic scales
+                plt.xscale("log")
+                plt.yscale("log")
 
-            # Adding labels and title
-            plt.xlabel("e_neg")
-            plt.ylabel("e_out")
-            plt.title("e_neg vs e_out Scatter Plot")
+                # Adding labels and title
+                plt.xlabel("e_neg")
+                plt.ylabel("e_out")
+                plt.title("e_neg vs e_out Scatter Plot")
 
-            # Add legend
-            plt.legend()
+                # Add legend
+                plt.legend()
 
-            # Save the plot as an image
-            output_file = os.path.join(
-                f"{file_path}/figures", f"{os.path.splitext(res_file)[0]}.png"
-            )
-            os.makedirs(os.path.dirname(output_file), exist_ok=True)
-            plt.savefig(output_file, dpi=500)
-            plt.close()
+                # Save the plot as an image
+                output_file = os.path.join(
+                    f"{file_path}/figures", f"{os.path.splitext(res_file)[0]}.png"
+                )
+                os.makedirs(os.path.dirname(output_file), exist_ok=True)
+                plt.savefig(output_file, dpi=500)
+                plt.close()
 
     # Histogram
     elif graph == "2":

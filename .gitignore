@@ -21,3 +21,6 @@ __pycache__/enrichment_stats.cpython-311.pyc
 __pycache__/graph_figures.cpython-311.pyc
 **/*.pyc
 .DS_Store
+build/
+dist/
+pandaseq-master/
