@@ -270,7 +270,7 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                         else [max(c_neg - c_neg_boot[1], 1), c_neg + c_neg_boot[1]]
                     )
                     f_neg_range = [(x / float(totals[1])) for x in c_neg_range]
-                    row.append(str(c_neg_boot)) # a_neg
+                    row.append(str(c_neg)) # a_neg
                     row.append(str(format_bootstrap(c_neg_range, "a"))) # a_neg 95
                     row.append(str(f"{f_neg:.6f}")) # f_neg
                     row.append(format_bootstrap(f_neg_range, "f")) # f_neg 95
