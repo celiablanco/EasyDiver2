@@ -270,7 +270,7 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                         else [max(c_neg - c_neg_boot[1], 1), c_neg + c_neg_boot[1]]
                     )
                     f_neg_range = [(x / float(totals[1])) for x in c_neg_range]
-                    row.append(str(c_neg)) # a_neg
+                    row.append(str(c_neg_boot)) # a_neg
                     row.append(str(format_bootstrap(c_neg_range, "a"))) # a_neg 95
                     row.append(str(f"{f_neg:.6f}")) # f_neg
                     row.append(format_bootstrap(f_neg_range, "f")) # f_neg 95
@@ -279,9 +279,15 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                     
 
                 # Calculate and adjust enrichment in positive and negative pools
-                if (f_in_range[0] > 0):  # If the max is more than 1, we've set the min to more than 1
-                    enr_post_min = (f_post_range[0] / f_in_range[1])  # Min enrichment due to selection - assumes smallest f_out and largest f_in
-                    enr_post_max = (f_post_range[1] / f_in_range[0])  # Max enrichment due to selection - assumes largest f_out and smallest f_in
+                if (
+                    f_in_range[0] > 0
+                ):  # If the max is more than 1, we've set the min to more than 1
+                    enr_post_min = (
+                        f_post_range[0] / f_in_range[1]
+                    )  # Min enrichment due to selection - assumes smallest f_out and largest f_in
+                    enr_post_max = (
+                        f_post_range[1] / f_in_range[0]
+                    )  # Max enrichment due to selection - assumes largest f_out and smallest f_in
                     if neg_file is not None:
                         enr_neg_min = f_neg_range[0] / f_in_range[1]
                         enr_neg_max = f_neg_range[1] / f_in_range[0]
@@ -299,7 +305,7 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                     row.append(str(f"{enr_post:.6f}"))
                     row.append(str(f"[{enr_post_min:.6f}, {enr_post_max:.6f}]"))
                 else:
-                    row.append("-")
+                    row.extend(['-', '-'])
 
                 if neg_file is not None:  # 2A, 2B case check
                     if enr_neg_max > 0:
@@ -307,7 +313,9 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                         row.append(str(f"{enr_neg:.6f}"))
                         row.append(str(f"[{enr_neg_min:.6f}, {enr_neg_max:.6f}]"))
                     else:
-                        row.append("-")
+                        row.extend(['-', '-'])
+                else:
+                    row.extend(['-', '-'])
 
                 if enr_neg_max > 0 and enr_neg_min > 0:
                     enr_ratio_min = enr_post_min / enr_neg_max
@@ -315,7 +323,7 @@ def run_enrichment_analysis(out_file, in_file=None, res_file=None, neg_file=None
                     row.append(str(f"{enr_post / enr_neg:.6f}"))
                     row.append(str(f"[{enr_ratio_min:.6f}, {enr_ratio_max:.6f}]"))
                 elif neg_file is None:
-                    row.append(" ")
+                    row.extend(['-', '-'])
                 else:
                     row.append("-")
 
